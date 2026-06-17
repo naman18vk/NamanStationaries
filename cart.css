@@ -1,0 +1,158 @@
+/* =======================================================
+   CART PAGE CUSTOM INTERFACE STYLING
+   ======================================================= */
+
+/* मुख्य कंटेनर बॉक्स */
+.cart-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+/* पेज का टाइटल */
+.cart-header-title {
+    text-align: center;
+    color: #0d3b4c; /* थीम से मैच करता हुआ डार्क कलर */
+    margin-bottom: 30px;
+}
+
+/* कार्ट डेटा टेबल की मुख्य ग्रिड */
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* टेबल के हेडर सेल्स */
+.cart-table th {
+    background-color: #0d3b4c;
+    color: white;
+    padding: 14px 12px;
+    text-align: left;
+    font-size: 15px;
+}
+
+/* टेबल के डेटा रो सेल्स */
+.cart-table td {
+    padding: 14px 12px;
+    text-align: left;
+    border-bottom: 1px solid #eeeeee;
+    vertical-align: middle;
+    color: #333333;
+}
+
+/* कार्ट में दिखने वाली प्रोडक्ट इमेज */
+.cart-img {
+    width: 65px;
+    height: 65px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+/* आइटम हटाने वाला डिलीट बटन */
+.remove-btn {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.remove-btn:hover {
+    background-color: #ff1a1a;
+}
+
+/* कुल बिल (Grand Total) का ब्लॉक */
+.cart-total {
+    text-align: right;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 25px;
+    color: #0d3b4c;
+    padding-right: 10px;
+}
+
+/* नीचे मौजूद दोनों बटनों का लेआउट बॉक्स */
+.cart-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+}
+
+/* शॉपिंग जारी रखें (Continue Shopping) लिंक */
+.btn-shop {
+    background-color: #555555;
+    color: white;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.btn-shop:hover {
+    background-color: #333333;
+}
+
+/* चेकआउट बटन (Proceed to Checkout) */
+.btn-checkout {
+    background-color: #ff4500; /* नेवबार के कार्ट आइकॉन जैसा नारंगी/लाल */
+    color: white;
+    padding: 12px 26px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-checkout:hover {
+    background-color: #e03d00;
+}
+
+.btn-checkout:active {
+    transform: scale(0.98);
+}
+
+/* रिस्पॉन्सिव लेआउट - मोबाइल स्क्रीन के लिए */
+@media (max-width: 600px) {
+    .cart-table th:nth-child(3), 
+    .cart-table td:nth-child(3) {
+        display: none; /* छोटी स्क्रीन पर सिंगल प्राइस कॉलम छिप जाएगा */
+    }
+    .cart-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .btn-shop, .btn-checkout {
+        width: 100%;
+        text-align: center;
+    }
+}
+header {
+    padding: 20px; 
+    background-color: #0d3b4c; 
+    color: white; 
+    /* नाम को बीच में लाने के लिए ये तीन लाइनें ज़रूरी हैं */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 28px;
+    text-align: center; /* यह टेक्स्ट को हमेशा सेंटर में रखेगा */
+}

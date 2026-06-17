@@ -1,0 +1,168 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #f4f7f6; /* Light grey background jaisa homepage par hai */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.contact-container {
+    background: #fff;
+    max-width: 900px;
+    width: 100%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* 🟢 Homepage ke Dark Teal color se matched box */
+.contact-info {
+    background: #1f4e5b; /* Aapki theme ka dark teal color */
+    color: #fff;
+    padding: 40px;
+    flex: 1;
+    min-width: 300px;
+}
+
+/* ↩️ Back to Home Button (Homepage ke Logout button jaisa responsive) */
+.home-btn {
+    display: inline-block;
+    color: #fff;
+    text-decoration: none;
+    background: #2a6677; /* Thoda light teal */
+    padding: 8px 16px;
+    border-radius: 4px;
+    margin-bottom: 25px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: 0.3s;
+    border: 1px solid #367d91;
+}
+
+.home-btn:hover {
+    background: #367d91; /* Homepage ke Logout button jaisa Red hover effect */
+    border-color: #000000;
+}
+
+.contact-info h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    border-bottom: 2px solid #4092ad; /* Ek pyaari red underline */
+    padding-bottom: 8px;
+}
+
+.contact-info p {
+    margin-bottom: 20px;
+    line-height: 1.6;
+    color: #cbd5e1;
+}
+
+.info-item p {
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+.contact-form {
+    padding: 40px;
+    flex: 1.5;
+    min-width: 300px;
+}
+
+.contact-form h2 {
+    margin-bottom: 20px;
+    color: #1f4e5b;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.input-group input, .input-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    outline: none;
+    font-size: 16px;
+}
+
+/* Input select hone par theme color ki border dikhegi */
+.input-group input:focus, .input-group textarea:focus {
+    border-color: #1f4e5b;
+}
+
+/* Submit Button - Homepage ke Logout Button jaisa Red */
+.submit-btn {
+    background: #22876c; 
+    color: #fff;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    width: 100%;
+    transition: 0.3s;
+}
+
+.submit-btn:hover {
+    background: #47a46c; /* Darker red on hover */
+}
+
+@media (max-width: 768px) {
+    .contact-container {
+        flex-direction: column;
+    }
+}
+
+/* Live Map URL Link Button Styling */
+.map-link-btn {
+    display: inline-block;
+    margin-top: 10px;
+    color: #fff;
+    background: #ff4d4d; /* Homepage logout red color matching */
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+.map-link-btn:hover {
+    background: #e03333;
+}
+
+/* Map Container Layout block */
+.map-container {
+    margin-top: 20px;
+    width: 100%;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    border-radius: 6px;
+}
+/* Map Container Layout block */
+
+
+/* Map ke andar ke iframe ko auto-resize karne ke liye */
+.map-container iframe {
+    width: 100%;
+    height: 260px; /* Is value ko aap kam ya zyada kar sakte hain */
+    display: block;
+}

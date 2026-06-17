@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naman Stationaries</title>
+    
+    <!-- CSS File Linking -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="homepage">
+
+<header>
+    <!-- Top Alert Notification Bar -->
+    <div class="top-banner">
+        ALL STATIONERY ITEMS ARE AVAILABLE AT OUR SHOP
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <nav class="navbar-container">
+
+        <!-- Fixed to 'logo' class for branding -->
+        <div class="logo">Naman Stationaries</div>
+
+        <!-- Horizontal Nav Links (UPDATED WITH CLICKABLE LINKS) -->
+        <ul class="nav-links">
+            <li class="li"><a href="homepage.html" style="color: inherit; text-decoration: none;">Home</a></li>
+            <li class="li"><a href="#productGrid" style="color: inherit; text-decoration: none;">Shop</a></li>
+            <li class="li"><a href="about.html" style="color: inherit; text-decoration: none;">About</a></li>
+            <!-- Cart Icon Button (Updated with live count badge) -->
+            <a href="cart.html" class="cart-icon-btn" title="View Cart" style="display: flex; align-items: center; color: #ff4500; text-decoration: none; position: relative; transition: transform 0.2s ease;">
+                <svg width="32" height="32" viewBox="0 0 100 100" fill="currentColor">
+                    <path d="M8 22h14l12 42h44l10-34H32m4 46a6 6 0 1 1-12 0 6 6 0 0 1 12 0zm38 0a6 6 0 1 1-12 0 6 6 0 0 1 12 0M34 26l3 7h36l-2-7zm6 11h28v6H43zm3 10h20v5H46zm6-31V6h6v10zm-14 4l4-4 4 4zm28 0l4-4 4 4z"/>
+                </svg>
+                <!-- यह छोटा लाल गोला संख्या दिखाने के लिए है -->
+                <span id="cart-count" style="position: absolute; top: -5px; right: -5px; background-color: #ff0000; color: white; font-size: 11px; font-weight: bold; border-radius: 50%; padding: 2px 6px; min-width: 10px; text-align: center;">0</span>
+            </a>
+
+        </ul>
+
+        <!-- User Profile Area -->
+        <div class="user-profile">
+            <label id="username" class="corner-label">
+                Welcome
+            </label>
+        </div>
+
+        <!-- Cleaned up Logout Button (Removed invalid anchor tag wrappers) -->
+        <div class="auth-action">
+            <button onclick="logout()" class="logout-button">Logout</button>
+        </div>
+    </nav>
+</header>
+
+<!-- ================= MODIFIED HERO BANNER SECTION START ================= -->
+<!-- ================= UPDATED HERO BANNER SECTION ================= -->
+<section class="hero">
+    <!-- Left Side Slider (Image 1 ki jagah) -->
+    <div class="hero-image-container">
+        <div class="hero-image-track" id="image-track-left">
+            <img src="./image/bestfriend copy.jpg" alt="Left 1">
+            <img src="./image/Pencil Pack.jpg" alt="Left 2">
+            <img src="./image/hero books.png" alt="Left 3">
+            <img src="./image/hero cart.png" alt="Left 4">
+            <img src="./image/bestfriend copy.jpg" alt="Left Loop">
+        </div>
+    </div>
+
+    <!-- Center Content (Yeh ab dono photos ke exact beech mein rahega) -->
+    <div class="hero-content">
+        <h1>Naman Stationaries</h1>
+        <p>Your one-stop destination for all quality school and office supplies.</p>
+    </div>
+
+    <!-- Right Side Slider (Image 2 ki jagah) -->
+    <div class="hero-image-container">
+        <div class="hero-image-track" id="image-track-right">
+            <img src="./image/Pencil Pack.jpg" alt="Right 1">
+            <img src="./image/hero books.png" alt="Right 2">
+            <img src="./image/hero cart.png" alt="Right 3">
+            <img src="./image/bestfriend copy.jpg" alt="Right 4">
+            <img src="./image/Pencil Pack.jpg" alt="Right Loop">
+        </div>
+    </div>
+</section>
+
+<!-- ================= MODIFIED HERO BANNER SECTION END ================= -->
+
+<!-- Products Display Section -->
+<section class="Item">
+    <h2>Our Products</h2>
+
+    <!-- Dynamic items from IndexedDB will load right inside this container -->
+    <div class="product-grid" id="productGrid"></div>
+</section>
+
+<!-- JavaScript Logic Linking -->
+<script src="homepage.js"></script>
+
+</body>
+</html>
