@@ -1,178 +1,400 @@
-* {
-    box-sizing: border-box;
+/* ======================================================= */
+/* 1. GLOBAL & GLOBAL LOGIN/FORM PAGES BASIC STYLES        */
+/* ======================================================= */
+
+/* Puri body ko flexbox banakar sab kuch center kiya */
+/* NOTE: Isko humne class-specific kar diya hai taaki aapka homepage kharab na ho */
+body:not(.homepage) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #7dcad8;
+}
+
+/* Image block ka style */
+.image-container {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Form container jisme inputs hain */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Labels ko left-align rakhne ke liye */
+    width: 300px; /* Form ki width set ki */
+    padding: 20px;
+    background: rgb(117, 133, 168);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+}
+
+/* Sabhi inputs aur buttons ko full width kiya */
+input[type="text"], input[type="password"], button, .back-btn {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    box-sizing: border-box; /* Padding se width kharab na ho */
+}
+
+/* Styled link to replace the invalid nested button */
+.back-btn {
+    display: block;
+    text-align: center;
+    background-color: #e0e0e0;
+    color: black;
+    text-decoration: none;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 13.333px; /* Matches default button text size */
+    font-family: Arial;
+}
+
+:root {
+    --primary-green: #164950;
+    --light-bg: #e8f5e9;
+}
+
+
+/* ======================================================= */
+/* 2. HOMEPAGE SYSTEM & DYNAMIC INDEXEDDB PRODUCTS DISPLAY */
+/* ======================================================= */
+
+/* Reset for Homepage Layout Framework */
+.homepage {
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6;
+    font-family: Arial, sans-serif;
+    display: block; /* Overriding global flex box layout rules */
+    width: 100%;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.product-card {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+}
+
+.product-card h3 {
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+.price {
+    color: green;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.Item h2 {
+    text-align: center;
+    margin: 40px 0 10px 0;
+    color: #222;
+    font-size: 28px;
+}
+
+
+/* ======================================================= */
+/* 3. NAVIGATION BAR LAYOUT & ACTIONS BRANDING STYLES      */
+/* ======================================================= */
+
+/* Header Alert Notification Bar Style */
+header > div:first-child {
+    background-color: var(--primary-green, #164950);
+    color: white;
+    text-align: center;
+    padding: 8px 10px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+/* Navigation Menu Ribbon Layout Bar (Flexbox) */
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff;
+    padding: 15px 40px;
+    box-shadow: 0 2px 5px rgba(232, 9, 9, 0.992);
+}
+
+/* Brand Text Logo Placeholder */
+.logo {
+    font-weight: bold;
+    font-size: 20px;
+    color: var(--primary-green, #164950);
+}
+
+/* Horizontal Menu Links List Wrapper Row */
+nav ul {
+    list-style-type: none;
+    display: flex;
+    gap: 30px;
     margin: 0;
     padding: 0;
 }
 
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+/* Menu Individual Links Element styling anchors */
+nav .li {
+    font-size: 16px;
+    font-weight: 500;
     color: #333;
-    padding: 20px;
+    cursor: pointer;
+    padding: 6px 0;
+    position: relative;
+    transition: color 0.3s ease;
 }
 
-h2, h1 {
-    text-align: center;
-    margin-bottom: 20px;
+nav .li:hover {
+    color: var(--primary-green, #164950);
 }
 
-.image-container {
-    text-align: center;
-    margin: 20px auto;
+/* Profile Section Area text Welcome user labels */
+.corner-label {
+    font-size: 15px;
+    color: #6f0404;
+    text-transform: capitalize;
+}
+.auth-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.image-container img {
-    display: block;
-    margin: auto;
-    max-width: 100%;
-    height: auto;
-}
-
-.form-container {
-    background: white;
-    max-width: 400px;
-    margin: 30px auto;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
-}
-
-input[type="text"],
-input[type="number"],
-input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-button {
-    width: 100%;
-    background-color: #3498db;
+/* Clean Custom Action Logout Interface UI Controls */
+.logout-button {
+    background-color: #ff4d4d;
     color: white;
     border: none;
-    padding: 12px;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.logout-button:hover {
+    background-color: #e60000;
+    transform: scale(1.05);
+}
+
+.logout-button:active {
+    transform: scale(0.98);
+}
+
+
+/* ======================================================= */
+/* 4. FIXED TWO-SIDE AUTO TRACK HERO SLIDER FRAME WORK    */
+/* ======================================================= */
+
+/* Hero grid layout taaki text beech me rahe aur image containers sides me */
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 60px 40px;
+    gap: 20px;
+    background: linear-gradient(rgba(22, 73, 80, 0.9), rgba(22, 73, 80, 0.8));
+    overflow: hidden; /* Loop track canvas slide edges ko safe rkhne ke liye */
+}
+
+/* Center Core Content block Text management area */
+.hero-content {
+    flex: 1;
+    max-width: 450px;
+    text-align: center;
+    color: white;
+}
+
+.hero-content h1 {
+    font-size: 40px;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+}
+
+.hero-content p {
+    color: #e0e0e0;
+}
+
+/* Slider Frame Windows: Dono sides par sirf ek unique single photo feed block dikhayega */
+.hero-image-container {
+    width: 280px; 
+    overflow: hidden;
+    display: flex;
+    border-radius: 15px; /* Canvas curves styles shapes */
+}
+
+/* Horizontal Continuous Loop Slider Strip track row inline layouts */
+.hero-image-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out; /* JS translation logic animations smoothly */
+}
+
+/* Standardized Product Image blocks structures properties scale settings */
+.hero-image-track img {
+    width: 280px;
+    height: 280px;
+    object-fit: contain;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    flex-shrink: 0; /* Prevents compression layouts issues on rendering sliders */
+    background-color: rgba(255, 255, 255, 0.05); /* subtle layout layer look backgrounds */
+}
+
+/* Optional Call To Action design properties buttons settings if required */
+.cta-btn {
+    background-color: #ffcc00;
+    color: #111;
+    border: none;
+    padding: 12px 30px;
     font-size: 16px;
     font-weight: bold;
-    border-radius: 4px;
+    border-radius: 25px;
     cursor: pointer;
-    transition: background 0.2s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    width: auto !important;
 }
 
-button:hover {
-    background-color: #2980b9;
+.cta-btn:hover {
+    background-color: #ffa200;
+    transform: translateY(-2px);
 }
 
-a {
-    color: #3498db;
-    text-decoration: none;
+/* Responsive check layout adjustment rules: Mobile devices interfaces setups */
+@media (max-width: 900px) {
+    .hero {
+        flex-direction: column; /* Collapses structural rows columns on smartphone screens views */
+        text-align: center;
+        padding: 40px 20px;
+        gap: 30px;
+    }
+    .hero-image-container {
+        margin: 10px 0;
+        width: 280px;
+        justify-content: center;
+    }
+}
+.hero-image-track img:hover {
+    transform: scale(1.05); /* Photo thodi badi (zoom-in) hogi */
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5); /* Shadow thodi gehri ho jayegi */
+}
+/* 🔗 Nav bar ke links ki smooth styling */
+.nav-links .li a {
+    color: inherit; /* Jo color pehle text ka thha wahi rahega */
+    text-decoration: none; /* Niche ki underline hatane ke liye */
     display: inline-block;
-    margin-top: 10px;
+    padding: 5px 10px;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
 }
 
-a:hover {
-    text-decoration: underline;
+/* ✨ Link par mouse le jaane par hover effect (Aapki theme ke hisab se) */
+.nav-links .li a:hover {
+    color: #ff4d4d; /* Logout button jaisa matching red color */
 }
 
-.back-btn {
-    text-align: center;
-    background-color: #e74c3c;
-    color: white;
-    padding: 10px;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-.back-btn:hover {
-    background-color: #c0392b;
-}
-
-.navbar {
-    background-color: #333;
-    color: white;
-    padding: 15px 30px;
+/* Responsive adjustment agar text collapse ho raha ho */
+.nav-links {
     display: flex;
-    justify-content: space-between;
+    list-style: none;
+    gap: 20px; /* Links ke beech barabar jagah */
     align-items: center;
-    border-radius: 4px;
-    margin-bottom: 20px;
 }
-
-.navbar h2 {
-    margin: 0;
-}
-
-.logout-btn {
-    width: auto;
-    background-color: #ff4d4d;
-    padding: 8px 15px;
-}
-
-.logout-btn:hover {
-    background-color: #cc0000;
-}
-
-.card-container {
+/* --- राइट साइड के कंट्रोल्स को एक लाइन में सेट करने के लिए --- */
+.nav-controls-right {
     display: flex;
-    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px; /* एलिमेंट्स के बीच की दूरी */
+    margin-left: auto; /* इसे राइट साइड में पुश करने के लिए */
+}
+
+/* --- कार्ट आइकॉन बटन की मुख्य स्टाइलिंग --- */
+.cart-icon-btn {
+    display: flex;
+    align-items: center;
     justify-content: center;
-    gap: 20px;
-    margin-top: 30px;
+    color: #333333; /* आइकॉन का डिफ़ॉल्ट कलर (डार्क ग्रे/ब्लैक) */
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+    padding: 5px;
+    border-radius: 50px;
+}
+/* वेलकम, आइकॉन और लॉगआउट को पास लाने के लिए */
+.nav-right-group {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* आपको जितना कम गैप चाहिए, इस नंबर को उतना छोटा (जैसे 8px या 10px) कर लें */
 }
 
-.card {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    width: 250px;
-    padding: 15px;
-    text-align: center;
-    transition: transform 0.2s;
+/* आइकॉन का होवर इफ़ेक्ट */
+.cart-icon-btn:hover {
+    transform: scale(1.1);
 }
 
-.card:hover {
-    transform: translateY(-5px);
+
+/* --- माउस ले जाने (Hover) पर आइकॉन का इफ़ेक्ट --- */
+.cart-icon-btn:hover {
+    color: #ff4500; /* होवर करने पर लाल/नारंगी रंग में बदलेगा */
+    transform: scale(1.15); /* थोड़ा सा ज़ूम इन होगा */
+    background-color: rgba(0, 0, 0, 0.05); /* हल्का सा बैकग्राउंड शैडो */
 }
 
-.card img {
+/* --- रिस्पॉन्सिवनेस (मोबाइल स्क्रीन के लिए एडजस्टमेंट) --- */
+@media (max-width: 768px) {
+    .nav-controls-right {
+        gap: 10px;
+    }
+    .cart-icon-btn svg {
+        width: 26px; /* छोटी स्क्रीन पर आइकॉन थोड़ा छोटा हो जाएगा */
+        height: 26px;
+    }
+}
+/* --- प्रोडक्ट कार्ड के अंदर बटन की स्टाइलिंग --- */
+.add-to-cart-btn {
     width: 100%;
-    height: 150px;
-    object-fit: contain;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-}
-
-.card h3 {
-    margin: 15px 0 10px;
-    font-size: 1.2em;
-    color: #333;
-    text-align: center;
-}
-
-.card p {
-    color: #777;
-    font-size: 0.9em;
-    margin-bottom: 10px;
-}
-
-.card .price {
-    font-size: 1.1em;
+    background-color: #ff4500; /* आपके कार्ट आइकॉन से मैच करता हुआ नारंगी/लाल रंग */
+    color: white;
+    font-size: 14px;
     font-weight: bold;
-    color: #2ecc71;
-    margin: 10px 0;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-.buy-btn {
-    background-color: #2ecc71;
+/* --- माउस ले जाने पर (Hover Effect) --- */
+.add-to-cart-btn:hover {
+    background-color: #e03d00; /* थोड़ा गहरा रंग */
+    transform: translateY(-1px); /* हल्का सा ऊपर उठेगा */
 }
 
-.buy-btn:hover {
-    background-color: #27ae60;
+/* --- बटन दबाने पर (Click Effect) --- */
+.add-to-cart-btn:active {
+    transform: translateY(1px); /* क्लिक करने पर नीचे दबेगा */
 }
