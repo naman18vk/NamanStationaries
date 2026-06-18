@@ -1,31 +1,86 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>LOGIN - NAMAN'S WEBSITE</title>
-        <link rel="stylesheet" href="style.css">
-    </head>
-    
-    <body>
-        <div class="image-container">
-            <br>
-            <img src="n.png" alt="NAMAN'S stationaries" style="display:block; margin:auto;">
-            <br>
-        </div>
-
-        <div class="form-container">
-            <div>
-                <label>Enter your Name</label> <br>
-                <input type="text" id="login_username"><br><br>               
-                <label>Enter your Password</label> <br>
-                <input type="password" id="login_password"><br><br>
-                 
-                <button type="button" onclick="checkLoginData()">Login</button><br>
-                
-                <a href="homepage.html"><br>
-                    <div class="back-btn">Register Here</div>
-                </a> 
-            </div> 
+<head>
+    <meta charset="UTF-8">
+    <title>NAMAN'S WEBSITE - LOGIN</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="image-container">
+        <img src="n.png" alt="NAMAN'S stationaries" style="display:block; margin:auto;">
+    </div>
+    <div class="form-container">
+        <div>
+            <label>Enter your Name</label> <br>
+            <input type="text" id="login_username"><br><br>
+            
+            <label>Enter your Password</label> <br>
+            <input type="password" id="login_password"><br><br>
+            
+            <!-- यहाँ onclick="checkLoginData()" होना जरूरी है -->
+            <button type="button" onclick="checkLoginData()">Login</button><br><br>
+            
+            <p>Don't have an account? <a href="register.html">Register Here</a></p>
         </div> 
-        <script src="login.js"></script>
-    </body>
+    </div> 
+
+    <script>
+        const dbRequest = indexedDB.open("NamanWebsiteDB", 1);
+        let db;
+
+        dbRequest.onsuccess = function(event) {
+            db = event.target.result;
+            console.log("Database connected on Login Page!");
+        };
+
+        dbRequest.onerror = function(event) {
+            console.error("Database connection failed:", event.target.error);
+        };
+
+        function checkLoginData() {
+            const inputName = document.getElementById('login_username').value.trim();
+            const inputPass = document.getElementById('login_password').value;
+
+            if (!inputName || !inputPass) {
+                alert("Please fill all fields!");
+                return;
+            }
+
+            if (!db) {
+                alert("Database is not ready. Please refresh.");
+                return;
+            }
+
+            const transaction = db.transaction(["users"], "readonly");
+            const store = transaction.objectStore("users");
+            const getAllRequest = store.getAll();
+
+            getAllRequest.onsuccess = function(event) {
+                const allUsers = event.target.result;
+                let userFound = false;
+
+                for (let i = 0; i < allUsers.length; i++) {
+                    if (allUsers[i].username === inputName && allUsers[i].password === inputPass) {
+                        userFound = true;
+                        break;
+                    }
+                }
+
+                if (userFound === true) {
+                    localStorage.setItem("savedUsername", inputName);
+                    sessionStorage.setItem("loggedInUser", inputName);
+                    // GitHub Pages के लिए एकदम सही पाथ
+                    window.location.href = "homepage.html"; 
+                } else {
+                    alert("Invalid Username or Password! Please try again.");
+                }
+            };
+
+            getAllRequest.onerror = function(event) {
+                console.error("Error reading database:", event.target.error);
+                alert("Something went wrong during login check.");
+            };
+        }
+    </script>
+</body>
 </html>
