@@ -44,14 +44,10 @@ window.addEventListener("DOMContentLoaded", () => {
    LOGOUT
 ----------------------------- */
 
-function logout() {
-
-    localStorage.removeItem(
-        "savedUsername"
-    );
-
-    window.location.href =
-        "div.html";
+function logoutUser() {
+    localStorage.removeItem("savedUsername");
+    sessionStorage.removeItem("loggedInUser");
+    window.location.href = "index.html";
 }
 
 
