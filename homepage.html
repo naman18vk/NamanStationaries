@@ -4,52 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NAMAN'S STATIONARIES - HOME</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div>
+    <div class="navbar">
         <h2>Naman Stationaries</h2>
         <div>
-            <span id="welcome-message"></span>
-            <button type="button" onclick="logoutUser()">Logout</button>
+            <span id="welcome-message" style="margin-right: 20px; font-weight: bold;"></span>
+            <button type="button" class="logout-btn" onclick="logoutUser()">Logout</button>
         </div>
     </div>
 
     <div>
         <h1>Welcome to Our Stationary Store</h1>
-        <p>Explore our premium collection of notebooks, pens, and desk accessories.</p>
+        <p style="text-align: center;">Explore our premium collection of notebooks, pens, and desk accessories.</p>
 
-        <div>
-            <div>
+        <div class="card-container">
+            <div class="card">
                 <img src="notebook.png" alt="Premium Notebook">
                 <h3>Premium Notebook</h3>
                 <p>A5 Size, 160 Pages, Ruled Layout</p>
-                <div>₹120</div>
-                <button type="button">Add to Cart</button>
+                <div class="price">₹120</div>
+                <button type="button" class="buy-btn">Add to Cart</button>
             </div>
 
-            <div>
+            <div class="card">
                 <img src="gelpen.png" alt="Gel Pen Set">
                 <h3>Smooth Gel Pen Set</h3>
                 <p>Pack of 5, Waterproof Black Ink</p>
-                <div>₹50</div>
-                <button type="button">Add to Cart</button>
+                <div class="price">₹50</div>
+                <button type="button" class="buy-btn">Add to Cart</button>
             </div>
 
-            <div>
+            <div class="card">
                 <img src="deskorganizer.png" alt="Desk Organizer">
                 <h3>Mesh Desk Organizer</h3>
                 <p>Multi-compartment Metal Storage</p>
-                <div>₹350</div>
-                <button type="button">Add to Cart</button>
+                <div class="price">₹350</div>
+                <button type="button" class="buy-btn">Add to Cart</button>
             </div>
 
-            <div>
+            <div class="card">
                 <img src="highlighters.png" alt="Highlighters">
                 <h3>Pastel Highlighters</h3>
                 <p>Chisel Tip, Pack of 6 Soft Colors</p>
-                <div>₹180</div>
-                <button type="button">Add to Cart</button>
+                <div class="price">₹180</div>
+                <button type="button" class="buy-btn">Add to Cart</button>
             </div>
         </div>
     </div>
