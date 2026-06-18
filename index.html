@@ -11,13 +11,15 @@
     </div>
     <div class="form-container">
         <div>
+            <h2>LOGIN - NAMAN'S WEBSITE</h2>
+            
             <label>Enter your Name</label> <br>
             <input type="text" id="login_username"><br><br>
             
             <label>Enter your Password</label> <br>
             <input type="password" id="login_password"><br><br>
             
-            <!-- यहाँ onclick="checkLoginData()" होना जरूरी है -->
+            <!-- यह बटन सीधे नीचे दिए गए JavaScript फ़ंक्शन को ट्रिगर करेगा -->
             <button type="button" onclick="checkLoginData()">Login</button><br><br>
             
             <p>Don't have an account? <a href="register.html">Register Here</a></p>
@@ -25,6 +27,7 @@
     </div> 
 
     <script>
+        // 1. Database कनेक्शन सेट करना
         const dbRequest = indexedDB.open("NamanWebsiteDB", 1);
         let db;
 
@@ -37,7 +40,9 @@
             console.error("Database connection failed:", event.target.error);
         };
 
+        // 2. लॉगिन डेटा चेक करने का फ़ंक्शन
         function checkLoginData() {
+            console.log("Login button clicked");
             const inputName = document.getElementById('login_username').value.trim();
             const inputPass = document.getElementById('login_password').value;
 
@@ -51,14 +56,18 @@
                 return;
             }
 
+            // Database से डेटा सिर्फ पढ़ने (Read) के लिए ट्रांजेक्शन शुरू करें
             const transaction = db.transaction(["users"], "readonly");
             const store = transaction.objectStore("users");
+            
+            // सभी यूजर्स का डेटा एक साथ एरे (Array) में निकालें
             const getAllRequest = store.getAll();
 
             getAllRequest.onsuccess = function(event) {
                 const allUsers = event.target.result;
                 let userFound = false;
 
+                // एरे की पूरी लिस्ट पर लूप चलाकर चेक करना
                 for (let i = 0; i < allUsers.length; i++) {
                     if (allUsers[i].username === inputName && allUsers[i].password === inputPass) {
                         userFound = true;
@@ -67,9 +76,11 @@
                 }
 
                 if (userFound === true) {
+                    // लोकल और सेशन स्टोरेज में डेटा सेव करना
                     localStorage.setItem("savedUsername", inputName);
                     sessionStorage.setItem("loggedInUser", inputName);
-                    // GitHub Pages के लिए एकदम सही पाथ
+                    
+                    // GitHub Pages के लिए सही और सुरक्षित पाथ रिडायरेक्शन
                     window.location.href = "homepage.html"; 
                 } else {
                     alert("Invalid Username or Password! Please try again.");
