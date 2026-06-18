@@ -1,4 +1,4 @@
-const dbRequest = indexedDB.open("NamanWebsiteDB", 1);
+const dbRequest = indexedDB.open("NamanWebsiteDB", 2);
 let db;
 
 dbRequest.onsuccess = function(event) {
