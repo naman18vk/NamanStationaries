@@ -43,7 +43,7 @@ function checkLoginData() {
         if (userFound === true) {
             localStorage.setItem("savedUsername", inputName);
             sessionStorage.setItem("loggedInUser", inputName);
-            window.location.href = "https://github.com/naman18vk/NamanStationaries/blob/main/homepage.html"; 
+            window.location.href = "homepage.html"; 
         } else {
             alert("Invalid Username or Password! Please try again.");
         }
