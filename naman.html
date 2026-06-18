@@ -11,6 +11,8 @@
     </div>
     <div class="form-container">
         <div>
+            <h2>REGISTER - NAMAN'S WEBSITE</h2>
+            
             <label>Enter your Name</label> <br>
             <input type="text" id="username"><br><br>
             
@@ -23,7 +25,6 @@
             <label>Re-Enter your Password</label><br> 
             <input type="password" id="Re-Enter"><br><br>
             
-            <!-- यहाँ onclick="saveUserData()" होना जरूरी है -->
             <button type="button" onclick="saveUserData()">Submit</button><br><br>
             
             <a href="index.html">Back to Login</a>
@@ -85,13 +86,11 @@
                 const generatedSrNo = event.target.result;
                 alert(`Registration Successful! Serial Number: ${generatedSrNo}`);
                 
-                // फॉर्म खाली करना
                 document.getElementById('username').value = "";
                 document.getElementById('mobile_no').value = "";
                 document.getElementById('password').value = "";
                 document.getElementById('Re-Enter').value = "";
                 
-                // रजिस्टर होने के बाद सीधे लॉगिन पेज पर भेजें
                 window.location.href = "index.html";
             };
 
