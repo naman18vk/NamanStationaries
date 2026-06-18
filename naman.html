@@ -1,99 +1,105 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>NAMAN'S WEBSITE</title>
-        <link rel="stylesheet" href="style.css">
-    </head>
-    
-    <body>
-        <div class ="image-container">
-            <label>  </label><BR>
-            <img src="n.png" alt="NAMAN'S stationaries" style=" display:block; margin:auto;">
-            <label>  </label><BR>
-        </div>
-        <div class="form-container">
-            <div>
-                <label>Enter your Name</label> <br>
-                <input type="text" id="username"><br><br>
-                
-                <label> Enter your Mobile no.</label><br> 
-                <input type="number" id="mobile_no" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')"><br><br>
-                
-                <label>Enter your Password</label> <br>
-                <input type="password" id="password"><br><br>
-                
-                <label> Re-Enter your Password</label><br> 
-                <input type="password" id="Re-Enter"><br><br>
-                
-                <button type="button" onclick="saveUserData()">Submit</button><br>
-                
-                <a href="index.html">
-                    <div class="back-btn">
-                        Back
-                    </div>
-                </a> 
-            </div> 
+<head>
+    <meta charset="UTF-8">
+    <title>NAMAN'S WEBSITE - REGISTER</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="image-container">
+        <img src="n.png" alt="NAMAN'S stationaries" style="display:block; margin:auto;">
+    </div>
+    <div class="form-container">
+        <div>
+            <label>Enter your Name</label> <br>
+            <input type="text" id="username"><br><br>
+            
+            <label>Enter your Mobile no.</label><br> 
+            <input type="number" id="mobile_no" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')"><br><br>
+            
+            <label>Enter your Password</label> <br>
+            <input type="password" id="password"><br><br>
+            
+            <label>Re-Enter your Password</label><br> 
+            <input type="password" id="Re-Enter"><br><br>
+            
+            <!-- यहाँ onclick="saveUserData()" होना जरूरी है -->
+            <button type="button" onclick="saveUserData()">Submit</button><br><br>
+            
+            <a href="index.html">Back to Login</a>
         </div> 
+    </div> 
 
-        <script> 
-            const dbRequest = indexedDB.open("NamanWebsiteDB", 1)
-            let db
-            dbRequest.onupgradeneeded = function(event) {
-                db = event.target.result
-                if (!db.objectStoreNames.contains("users")) {
-                    db.createObjectStore("users", { keyPath: "srNo", autoIncrement: true })
-                }
-            }
-            dbRequest.onsuccess = function(event) {
-                db = event.target.result
-                console.log("Database initialized successfully!")
-            }
-            dbRequest.onerror = function(event) {
-                console.error("Database initialization failed:", event.target.error)
-            }
-            function saveUserData() { 
-                const name = document.getElementById('username').value.trim()
-                const mobile = document.getElementById('mobile_no').value
-                const pass = document.getElementById('password').value
-                const repass = document.getElementById('Re-Enter').value
+    <script> 
+        const dbRequest = indexedDB.open("NamanWebsiteDB", 1);
+        let db;
 
-                if (!name || !mobile || !pass || !repass) {
-                    alert("Please fill all fields!")
-                    return
-                }
-                if (pass !== repass) {
-                    alert("Passwords do not match!")
-                    return
-                }
-
-                if (!db) {
-                    alert("Database is not ready yet. Please try again.")
-                    return
-                }
-                const userData = {
-                    username: name,
-                    mobileNo: mobile,
-                    password: pass,
-                    timestamp: new Date().toLocaleString()
-                }
-                // डेटाबेस में लिखने (Write) के लिए ट्रांजेक्शन शुरू करना
-                const transaction = db.transaction(["users"], "readwrite")
-                const store = transaction.objectStore("users")
-                // डेटा को टेबल में जोड़ना
-                const addRequest = store.add(userData)
-                addRequest.onsuccess = function(event) {
-                    const generatedSrNo = event.target.result
-                    alert(`Registration Successful! Data saved inside Browser Database with Serial Number: ${generatedSrNo}`)
-                    document.getElementById('username').value = ""
-                    document.getElementById('mobile_no').value = ""
-                    document.getElementById('password').value = ""
-                    document.getElementById('Re-Enter').value = ""
-                }
-                addRequest.onerror = function(event) {
-                    console.error("Error saving user:", event.target.error)
-                    alert("Failed to save data to the database.")
-                }
+        dbRequest.onupgradeneeded = function(event) {
+            db = event.target.result;
+            if (!db.objectStoreNames.contains("users")) {
+                db.createObjectStore("users", { keyPath: "srNo", autoIncrement: true });
             }
-        </script>
-    </body>
+        };
+
+        dbRequest.onsuccess = function(event) {
+            db = event.target.result;
+            console.log("Database initialized successfully!");
+        };
+
+        dbRequest.onerror = function(event) {
+            console.error("Database initialization failed:", event.target.error);
+        };
+
+        function saveUserData() { 
+            const name = document.getElementById('username').value.trim();
+            const mobile = document.getElementById('mobile_no').value;
+            const pass = document.getElementById('password').value;
+            const repass = document.getElementById('Re-Enter').value;
+
+            if (!name || !mobile || !pass || !repass) {
+                alert("Please fill all fields!");
+                return;
+            }
+            if (pass !== repass) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            if (!db) {
+                alert("Database is not ready yet. Please try again.");
+                return;
+            }
+
+            const userData = {
+                username: name,
+                mobileNo: mobile,
+                password: pass,
+                timestamp: new Date().toLocaleString()
+            };
+
+            const transaction = db.transaction(["users"], "readwrite");
+            const store = transaction.objectStore("users");
+            const addRequest = store.add(userData);
+
+            addRequest.onsuccess = function(event) {
+                const generatedSrNo = event.target.result;
+                alert(`Registration Successful! Serial Number: ${generatedSrNo}`);
+                
+                // फॉर्म खाली करना
+                document.getElementById('username').value = "";
+                document.getElementById('mobile_no').value = "";
+                document.getElementById('password').value = "";
+                document.getElementById('Re-Enter').value = "";
+                
+                // रजिस्टर होने के बाद सीधे लॉगिन पेज पर भेजें
+                window.location.href = "index.html";
+            };
+
+            addRequest.onerror = function(event) {
+                console.error("Error saving user:", event.target.error);
+                alert("Failed to save data to the database.");
+            };
+        }
+    </script>
+</body>
 </html>
