@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "name": "Bestfriend Copy",
+    "price": "40",
+    "image": "images/bestfriend copy.jpg"
+  },
+  {
+    "id": "2",
+    "name": "Hauser Pens",
+    "price": "150",
+    "image": "images/Hauser Pens.jfif"
+  },
+  {
+    "id": "3",
+    "name": "Pencil Pack",
+    "price": "120",
+    "image": "images/Pencil Pack.jpg"
+  },
+  {
+    "id": "4",
+    "name": "Safari Bag",
+    "price": "1570",
+    "image": "images/Safari Bag.jfif"
+  }
+]
