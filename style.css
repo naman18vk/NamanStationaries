@@ -185,7 +185,7 @@ nav .li:hover {
 
 /* Clean Custom Action Logout Interface UI Controls */
 .logout-button {
-    background-color: #ff4d4d;
+    background-color: #164950;
     color: white;
     border: none;
     padding: 10px 18px;
@@ -197,7 +197,7 @@ nav .li:hover {
 }
 
 .logout-button:hover {
-    background-color: #e60000;
+    background-color: #a40d0d;
     transform: scale(1.05);
 }
 
@@ -300,7 +300,7 @@ nav .li:hover {
 }
 .hero-image-track img:hover {
     transform: scale(1.05); /* Photo thodi badi (zoom-in) hogi */
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5); /* Shadow thodi gehri ho jayegi */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5); /* Shadow thodi gehri ho jayegi */
 }
 /* 🔗 Nav bar ke links ki smooth styling */
 .nav-links .li a {
@@ -336,7 +336,7 @@ nav .li:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #333333; /* आइकॉन का डिफ़ॉल्ट कलर (डार्क ग्रे/ब्लैक) */
+    color: #000000; /* आइकॉन का डिफ़ॉल्ट कलर (डार्क ग्रे/ब्लैक) */
     text-decoration: none;
     cursor: pointer;
     transition: transform 0.2s ease, color 0.2s ease;
@@ -358,7 +358,7 @@ nav .li:hover {
 
 /* --- माउस ले जाने (Hover) पर आइकॉन का इफ़ेक्ट --- */
 .cart-icon-btn:hover {
-    color: #ff4500; /* होवर करने पर लाल/नारंगी रंग में बदलेगा */
+    color: #f41010; /* होवर करने पर लाल/नारंगी रंग में बदलेगा */
     transform: scale(1.15); /* थोड़ा सा ज़ूम इन होगा */
     background-color: rgba(0, 0, 0, 0.05); /* हल्का सा बैकग्राउंड शैडो */
 }
@@ -376,7 +376,7 @@ nav .li:hover {
 /* --- प्रोडक्ट कार्ड के अंदर बटन की स्टाइलिंग --- */
 .add-to-cart-btn {
     width: 100%;
-    background-color: #ff4500; /* आपके कार्ट आइकॉन से मैच करता हुआ नारंगी/लाल रंग */
+    background-color: #ffea00; /* आपके कार्ट आइकॉन से मैच करता हुआ नारंगी/लाल रंग */
     color: white;
     font-size: 14px;
     font-weight: bold;
@@ -390,7 +390,7 @@ nav .li:hover {
 
 /* --- माउस ले जाने पर (Hover Effect) --- */
 .add-to-cart-btn:hover {
-    background-color: #e03d00; /* थोड़ा गहरा रंग */
+    background-color: #9ce916; /* थोड़ा गहरा रंग */
     transform: translateY(-1px); /* हल्का सा ऊपर उठेगा */
 }
 
