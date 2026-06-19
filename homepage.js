@@ -1,7 +1,7 @@
 // =======================================================
 // 1. GLOBAL CONFIGURATIONS & VARIABLES
 // =======================================================
-const GITHUB_JSON_URL = "https://github.com/naman18vk/NamanStationaries/blob/main/items.json";
+const GITHUB_JSON_URL = "https://githubusercontent.com";
 const DB_NAME = "DynamicAppDB";
 const STORE_NAME = "Item";
 const DB_VERSION = 3; 
@@ -49,10 +49,10 @@ async function syncAndDisplayApp() {
     let finalProducts = [];
 
     try {
-        console.log("Items Are Being Fetched BY The Github");
+        console.log("GitHub se fresh items fetch kiye ja rahe hain...");
         const response = await fetch(GITHUB_JSON_URL);
         
-        if (!response.ok) throw new Error("Network Response directly blocked");
+        if (!response.ok) throw new Error("Network Response directly block ho gaya");
         const rawData = await response.json();
 
         // Data Structure Formatter (Extra trimming and sanitization)
@@ -134,7 +134,7 @@ function displayItem(Item) {
     productGrid.innerHTML = "";
 
     if (!Item || Item.length === 0) {
-        productGrid.innerHTML = `<h3>Items Not Found,Please Check Your Internet Connection Or JSON Repositories.</h3>`;
+        productGrid.innerHTML = `<h3>Samaan nahi mil paya. Internet connection ya JSON repositories check karein.</h3>`;
         return;
     }
 
