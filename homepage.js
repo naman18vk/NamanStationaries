@@ -1,7 +1,7 @@
 // =======================================================
 // 1. GLOBAL CONFIGURATIONS & VARIABLES
 // =======================================================
-const GITHUB_JSON_URL = "https://raw.githubusercontent.com/naman18vk/NamanStationaries/main/items.json";
+const GITHUB_JSON_URL = "https://raw.githubusercontent.com/naman18vk/NamanStationaries/refs/heads/main/items.json";
 const DB_NAME = "DynamicAppDB";
 const STORE_NAME = "Item";
 const DB_VERSION = 3; 
