@@ -1,5 +1,6 @@
 // 1. ⚠️ APNI GITHUB RAW FILE KA URL YAHAN DALEIN
-const GITHUB_JSON_URL = "https://githubusercontent.com";
+const GITHUB_JSON_URL = "https://github.com/naman18vk/NamanStationaries/blob/main/items.json";
+
 
 const DB_NAME = "DynamicAppDB";
 const STORE_NAME = "Item"; // Table ka naam
