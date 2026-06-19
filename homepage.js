@@ -1,167 +1,170 @@
+// 1. ⚠️ APNI GITHUB RAW FILE KA URL YAHAN DALEIN
+const GITHUB_JSON_URL = "https://githubusercontent.com";
+
+const DB_NAME = "DynamicAppDB";
+const STORE_NAME = "Item"; // Table ka naam
+
+/* -----------------------------
+   PAGE LOAD INITIALIZATION
+----------------------------- */
 window.addEventListener("DOMContentLoaded", () => {
 
-    const usernameLabel =
-        document.getElementById("username");
+    const usernameLabel = document.getElementById("username");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const fetchedData = localStorage.getItem("savedUsername");
 
-    const logoutBtn =
-        document.getElementById("logoutBtn");
-
-    const fetchedData =
-        localStorage.getItem("savedUsername");
-
-    // Welcome User
-
+    // Welcome User Logic
     if (fetchedData && usernameLabel) {
-
-        usernameLabel.textContent =
-            `Welcome ${fetchedData}`;
-
+        usernameLabel.textContent = `Welcome ${fetchedData}`;
         if (logoutBtn) {
-            logoutBtn.style.display =
-                "inline-block";
+            logoutBtn.style.display = "inline-block";
         }
-
     } else {
-
         if (usernameLabel) {
-            usernameLabel.textContent =
-                "Welcome";
+            usernameLabel.textContent = "Welcome";
         }
-
         if (logoutBtn) {
-            logoutBtn.style.display =
-                "none";
+            logoutBtn.style.display = "none";
         }
     }
 
-    // Load Item From IndexedDB
-
-    loadItem();
+    // 2. 🔥 NEW: Pehle GitHub se naya data sync karein, fir load karein
+    syncAndLoadData();
+    
+    // Cart badge numbers ko upar update karein
+    updateCartBadge();
 });
 
-
 /* -----------------------------
-   LOGOUT
+   FETCH FROM GITHUB & SYNC TO INDEXEDDB
 ----------------------------- */
+async function syncAndLoadData() {
+    try {
+        console.log("GitHub se fresh data fetch ho raha hai...");
+        const response = await fetch(GITHUB_JSON_URL);
+        
+        if (!response.ok) throw new Error("GitHub File Not Found");
+        const freshData = await response.json();
 
-function logoutUser() {
-    localStorage.removeItem("savedUsername");
-    sessionStorage.removeItem("loggedInUser");
-    window.location.href = "index.html";
+        // Data ko IndexedDB me background me save karein
+        await saveDataToIndexedDB(freshData);
+        console.log("IndexedDB successfully updated from GitHub!");
+
+    } catch (error) {
+        console.warn("GitHub se data nahi mila (Offline Mode). Existing Local Data load kiya ja raha hai.", error);
+    } finally {
+        // Chahe internet ho ya na ho, database me jo bacha hai use screen par dikhao
+        loadItem();
+    }
 }
 
+// Helper function database me naya data overwrite karne ke liye
+function saveDataToIndexedDB(data) {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME);
+
+        // Agar user pehli baar website khol raha hai aur table nahi bani hai
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+                db.createObjectStore(STORE_NAME, { keyPath: "id" });
+            }
+        };
+
+        request.onsuccess = (event) => {
+            const db = event.target.result;
+            
+            // Agar browser update nahi hua to safety check ke liye store banana
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+                db.close();
+                resolve(); // Fallback to avoid freeze
+                return;
+            }
+
+            const transaction = db.transaction(STORE_NAME, "readwrite");
+            const store = transaction.objectStore(STORE_NAME);
+
+            // Purana data saaf karke live data fill karein
+            store.clear();
+
+            data.forEach(product => {
+                store.put(product);
+            });
+
+            transaction.oncomplete = () => { db.close(); resolve(); };
+            transaction.onerror = () => reject(transaction.error);
+        };
+
+        request.onerror = () => reject(request.error);
+    });
+}
 
 /* -----------------------------
-   INDEXEDDB
+   INDEXEDDB SE DATA READ KARNA
 ----------------------------- */
-
-const DB_NAME = "DynamicAppDB";
-
-
 function loadItem() {
-
-    const request =
-        indexedDB.open(DB_NAME);
+    const request = indexedDB.open(DB_NAME);
 
     request.onsuccess = (event) => {
+        const db = event.target.result;
 
-        const db =
-            event.target.result;
-
-        // Check Item Table
-
-        if (
-            !db.objectStoreNames.contains(
-                "Item"
-            )
-        ) {
-
-            console.log(
-                "Item table not found"
-            );
-
+        if (!db.objectStoreNames.contains(STORE_NAME)) {
+            console.log("Item table not found");
+            displayItem([]); // Khali array bhejkar "No Item Found" dikhayein
             return;
         }
 
-        const transaction =
-            db.transaction(
-                "Item",
-                "readonly"
-            );
+        const transaction = db.transaction(STORE_NAME, "readonly");
+        const store = transaction.objectStore(STORE_NAME);
+        const getAllRequest = store.getAll();
 
-        const store =
-            transaction.objectStore(
-                "Item"
-            );
-
-        const getAllRequest =
-            store.getAll();
-
-        getAllRequest.onsuccess =
-            () => {
-
-            const Item =
-                getAllRequest.result;
-
-            displayItem(
-                Item
-            );
+        getAllRequest.onsuccess = () => {
+            const Item = getAllRequest.result;
+            displayItem(Item);
         };
 
-        getAllRequest.onerror =
-            () => {
-
-            console.log(
-                "Failed to load Item"
-            );
+        getAllRequest.onerror = () => {
+            console.log("Failed to load Item");
         };
     };
 
     request.onerror = () => {
-
-        console.log(
-            "Database open failed"
-        );
+        console.log("Database open failed");
     };
 }
 
-
 /* -----------------------------
-   DISPLAY Item (UPDATED WITH ADD TO CART BUTTON)
+   DISPLAY ITEM ON HTML GRID
 ----------------------------- */
-
 function displayItem(Item) {
-
-    const productGrid =
-        document.getElementById(
-            "productGrid"
-        );
-
+    const productGrid = document.getElementById("productGrid");
     if (!productGrid) return;
 
     productGrid.innerHTML = "";
 
-    if (
-        !Item ||
-        Item.length === 0
-    ) {
-        productGrid.innerHTML =
-        `<h3>No Item Found</h3>`;
+    if (!Item || Item.length === 0) {
+        productGrid.innerHTML = `<h3>No Item Found</h3>`;
         return;
     }
 
-    // Dynamic grid nodes creation array loops
     Item.forEach(product => {
-
-        // unique string identifier logic parsing handler rule
         const idString = product.id ? String(product.id) : '';
+
+        // 🔥 Image path security fix handler (C:\ drive local path ko relative path me badalna)
+        let finalImagePath = product.image;
+        if (product.image && product.image.includes("C:\\")) {
+            // Agar JSON me purana path hai, to use './image/FileName.extension' me change karo
+            const fileName = product.image.split('\\').pop(); // 'Safari Bag.jfif' nikalega
+            finalImagePath = `./image/${fileName}`;
+        }
 
         productGrid.innerHTML += `
         <div class="product-card">
             <div class="card img">
                 <img
-                    src="${product.image}"
-                    alt="${product.name}">
+                    src="${finalImagePath}"
+                    alt="${product.name}"
+                    onerror="this.src='./image/hero books.png'"> <!-- Agar photo na mile to blank placeholder -->
             </div>
             <h3>
                 ${product.name}
@@ -169,8 +172,6 @@ function displayItem(Item) {
             <p class="price">
                 Rs. ${product.price}
             </p>
-            
-            <!-- यहाँ नया Add to Cart बटन जोड़ दिया गया है -->
             <button class="add-to-cart-btn" onclick="addToCart('${idString}')">
                 Add to Cart
             </button>
@@ -179,99 +180,8 @@ function displayItem(Item) {
     });
 }
 
-
 /* -----------------------------
-   ADD TO CART LOGIC (NEW FUNCTION)
------------------------------ */
-function addToCart(productId) {
-    if (!productId) {
-        alert("Product ID not found!");
-        return;
-    }
-
-    // LocalStorage से पुराना कार्ट डेटा लाएं, या खाली एरे [] सेट करें
-    let cart = JSON.parse(localStorage.getItem("userCart")) || [];
-
-    // चेक करें कि क्या प्रोडक्ट पहले से कार्ट में है
-    let existingItem = cart.find(item => item.id === productId);
-
-    if (existingItem) {
-        existingItem.quantity += 1; // यदि है, तो संख्या 1 बढ़ाएं
-    } else {
-        cart.push({ id: productId, quantity: 1 }); // यदि नया है, तो जोड़ें
-    }
-
-    // अपडेटेड कार्ट को वापस LocalStorage में सेव करें
-    localStorage.setItem("userCart", JSON.stringify(cart));
-
-    // यूजर को अलर्ट दिखाएं
-    alert("Item added to cart successfully!");
-}
-
-
-// =======================================================
-// 5. HERO TWO-SIDE TRACK SLIDER INTERFACES LOGIC
-// =======================================================
-const trackLeft = document.getElementById('image-track-left');
-const trackRight = document.getElementById('image-track-right');
-let currentIndex = 0;
-const stepWidth = 280; // Individual slide image wrapper configuration width
-
-function slideImages() {
-    // Agar kisi vajah se html structure nodes update na hon to crash block safe check rule
-    if (!trackLeft || !trackRight) return;
-
-    currentIndex++;
-
-    // Dono layout blocks tracking animations ko parallel sync shift karein
-    trackLeft.style.transition = "transform 0.5s ease-in-out";
-    trackRight.style.transition = "transform 0.5s ease-in-out";
-    
-    trackLeft.style.transform = `translateX(-${currentIndex * stepWidth}px)`;
-    trackRight.style.transform = `translateX(-${currentIndex * stepWidth}px)`;
-
-    // Har 4th position complete hone par bina jhatke loop reset karein (Index 4)
-    if (currentIndex >= 4) {
-        setTimeout(() => {
-            trackLeft.style.transition = "none";
-            trackRight.style.transition = "none";
-            
-            currentIndex = 0;
-            
-            trackLeft.style.transform = `translateX(0px)`;
-            trackRight.style.transform = `translateX(0px)`;
-        }, 500); // 0.5 second animation transitions frames timing configuration delay
-    }
-}
-
-// Har 1 second (1000 milliseconds) mein sliding operation automatic run karein
-setInterval(slideImages, 1000);
-/* -----------------------------
-   UPDATE CART COUNT VISUALLY
------------------------------ */
-function updateCartBadge() {
-    const cartCountLabel = document.getElementById("cart-count");
-    if (!cartCountLabel) return;
-
-    // LocalStorage से कार्ट डेटा लाएं
-    let cart = JSON.parse(localStorage.getItem("userCart")) || [];
-    
-    // कार्ट में मौजूद सभी सामानों की कुल संख्या (Total Quantity) जोड़ें
-    let totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-
-    // कार्ट आइकॉन के ऊपर नंबर को अपडेट करें
-    cartCountLabel.textContent = totalItems;
-    
-    // अगर कार्ट खाली है तो संख्या को छिपा दें (ऑप्शनल सुंदर लुक के लिए)
-    if (totalItems === 0) {
-        cartCountLabel.style.display = "none";
-    } else {
-        cartCountLabel.style.display = "inline-block";
-    }
-}
-
-/* -----------------------------
-   ADD TO CART LOGIC (UPDATED)
+   ADD TO CART LOGIC
 ----------------------------- */
 function addToCart(productId) {
     if (!productId) {
@@ -290,16 +200,68 @@ function addToCart(productId) {
 
     localStorage.setItem("userCart", JSON.stringify(cart));
 
-    // क्लिक करते ही तुरंत आइकॉन का नंबर लाइव अपडेट करें (बिना पेज रीफ्रेश किए)
+    // Instant counter update
     updateCartBadge();
 
     alert("Item added to cart successfully!");
 }
 
-// जब पहली बार वेबसाइट का पेज खुले, तो कार्ट में पहले से ऐड सामान की संख्या दिखाने के लिए:
-window.addEventListener("DOMContentLoaded", () => {
-    // आपकी पुरानी कोड लाइन्स यहाँ पहले से मौजूद हैं...
+/* -----------------------------
+   UPDATE CART COUNT VISUALLY
+----------------------------- */
+function updateCartBadge() {
+    const cartCountLabel = document.getElementById("cart-count");
+    if (!cartCountLabel) return;
+
+    let cart = JSON.parse(localStorage.getItem("userCart")) || [];
+    let totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+
+    cartCountLabel.textContent = totalItems;
     
-    // इस लाइन को सबसे नीचे जोड़ें ताकि पुराना सेव डेटा लोड हो सके
-    updateCartBadge();
-});
+    if (totalItems === 0) {
+        cartCountLabel.style.display = "none";
+    } else {
+        cartCountLabel.style.display = "inline-block";
+    }
+}
+
+/* -----------------------------
+   LOGOUT
+----------------------------- */
+function logoutUser() {
+    localStorage.removeItem("savedUsername");
+    sessionStorage.removeItem("loggedInUser");
+    window.location.href = "index.html";
+}
+
+/* -----------------------------
+   HERO TWO-SIDE TRACK SLIDER LOGIC
+----------------------------- */
+const trackLeft = document.getElementById('image-track-left');
+const trackRight = document.getElementById('image-track-right');
+let currentIndex = 0;
+const stepWidth = 280; 
+
+function slideImages() {
+    if (!trackLeft || !trackRight) return;
+
+    currentIndex++;
+
+    trackLeft.style.transition = "transform 0.5s ease-in-out";
+    trackRight.style.transition = "transform 0.5s ease-in-out";
+    
+    trackLeft.style.transform = `translateX(-${currentIndex * stepWidth}px)`;
+    trackRight.style.transform = `translateX(-${currentIndex * stepWidth}px)`;
+
+    if (currentIndex >= 4) {
+        setTimeout(() => {
+            trackLeft.style.transition = "none";
+            trackRight.style.transition = "none";
+            currentIndex = 0;
+            trackLeft.style.transform = `translateX(0px)`;
+            trackRight.style.transform = `translateX(0px)`;
+        }, 500); 
+    }
+}
+
+setInterval(slideImages, 1000);
