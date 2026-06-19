@@ -30,7 +30,7 @@ function displayItem(itemsList) {
     itemsList.forEach(product => {
         productGrid.innerHTML += `
         <div class="product-card">
-            <div class="card img"><img src="${product.image}" alt="${product.name}" onerror="this.src='./image/bestfriend.jpg'"></div>
+            <div class="card img"><img src="${product.image}" alt="${product.name}"></div>
             <h3>${product.name}</h3>
             <p class="price">Rs. ${product.price}</p>
             <button class="add-to-cart-btn" onclick="addToCart('${product.id}')">Add to Cart</button>
