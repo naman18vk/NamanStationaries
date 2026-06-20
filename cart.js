@@ -1,3 +1,4 @@
+// Master products array reference mapping keys
 const MASTER_PRODUCTS = [
   { "id": "1", "name": "Bestfriend Copy", "price": "40", "image": "./image/bestfriend copy.jpg" },
   { "id": "2", "name": "Hauser Pens", "price": "150", "image": "./image/Hauser Pens.jfif" },
@@ -11,6 +12,9 @@ window.addEventListener("DOMContentLoaded", () => {
     generateCartTable();
 });
 
+/* -------------------------------------------------------
+   1. MAIN ENGINE: GENERATE CART LIST VIEW TABLE
+   ------------------------------------------------------- */
 function generateCartTable() {
     const tableBody = document.getElementById("cartTableBody");
     const tableElement = document.getElementById("cartTable");
@@ -18,6 +22,7 @@ function generateCartTable() {
     const emptyMessage = document.getElementById("emptyMessage");
     const grandTotalLabel = document.getElementById("cartGrandTotal");
 
+    // LocalStorage se saved array fetch karein
     let cartArray = JSON.parse(localStorage.getItem("userCart")) || [];
     tableBody.innerHTML = "";
 
@@ -35,6 +40,7 @@ function generateCartTable() {
     globalTotalBill = 0;
 
     cartArray.forEach(cartItem => {
+        // ID ke basis par details match karein
         const originalItem = MASTER_PRODUCTS.find(p => String(p.id).trim() === String(cartItem.id).trim());
 
         if (originalItem) {
@@ -63,6 +69,9 @@ function generateCartTable() {
     grandTotalLabel.textContent = `Rs. ${globalTotalBill}`;
 }
 
+/* -------------------------------------------------------
+   2. TRANSACTION CONTROLLERS: PLUS, MINUS & REMOVE
+   ------------------------------------------------------- */
 function updateQty(productId, amount) {
     let cartArray = JSON.parse(localStorage.getItem("userCart")) || [];
     let item = cartArray.find(i => String(i.id).trim() === String(productId).trim());
@@ -73,7 +82,7 @@ function updateQty(productId, amount) {
             cartArray = cartArray.filter(i => String(i.id).trim() !== String(productId).trim());
         }
         localStorage.setItem("userCart", JSON.stringify(cartArray));
-        generateCartTable();
+        generateCartTable(); 
     }
 }
 
@@ -85,17 +94,17 @@ function removeItem(productId) {
 }
 
 /* -------------------------------------------------------
-   🔥 FUNCTION 1: ONLY CLEAR CART (No Invoice PopUp)
+   3. BUTTON FUNCTION 1: ONLY CLEAR CART (No Invoice PopUp)
    ------------------------------------------------------- */
 function clearCartOnly() {
-    if(confirm("Kya aap poora cart saaf karna chahte hain?")) {
+    if (confirm("Kya aap poora cart saaf karna chahte hain?")) {
         localStorage.removeItem("userCart");
         generateCartTable();
     }
 }
 
 /* -------------------------------------------------------
-   🔥 FUNCTION 2: PROCEED TO CHECKOUT (Show Invoice Bill)
+   4. BUTTON FUNCTION 2: PROCEED TO CHECKOUT (Show Invoice Bill)
    ------------------------------------------------------- */
 function openReceiptBill() {
     let cartArray = JSON.parse(localStorage.getItem("userCart")) || [];
@@ -103,7 +112,7 @@ function openReceiptBill() {
 
     const modal = document.getElementById("receiptModal");
     const receiptBody = document.getElementById("receiptItemsBody");
-    const receiptTotal = document.getElementById("receiptGrandTotal");
+    const receiptTotal = document.querySelectorAll("#receiptGrandTotal");
     const receiptDate = document.getElementById("receiptDate");
     const receiptTxn = document.getElementById("receiptTxn");
 
@@ -123,7 +132,8 @@ function openReceiptBill() {
         }
     });
 
-    receiptTotal.textContent = `Rs. ${globalTotalBill}`;
+    // Update total in receipt modal
+    receiptTotal.forEach(el => el.textContent = `Rs. ${globalTotalBill}`);
     receiptDate.textContent = `Date: ${new Date().toLocaleDateString()} | Time: ${new Date().toLocaleTimeString()}`;
     receiptTxn.textContent = `TXN ID: NS${Math.floor(100000 + Math.random() * 900000)}`;
 
