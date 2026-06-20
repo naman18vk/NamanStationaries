@@ -1,5 +1,5 @@
 .cart-container {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 40px auto;
     padding: 20px;
     background: #fff;
@@ -13,15 +13,12 @@
 }
 .cart-table th, .cart-table td {
     padding: 12px;
-    text-align: left;
+    text-align: center;
     border-bottom: 1px solid #ddd;
 }
 .cart-table th {
-    background-color: #0d3b4c;
-    color: white;
-    padding: 14px 12px;
-    text-align: left;
-    font-size: 15px;
+    background-color: #f8f9fa;
+    color: #333;
 }
 .table-img {
     width: 60px;
@@ -54,9 +51,6 @@
     padding: 6px 12px;
     border-radius: 4px;
     cursor: pointer;
-}
-.delete-row-btn:hover{
-   backgroung:#ff1a1a
 }
 .cart-summary-box {
     margin-top: 20px;
