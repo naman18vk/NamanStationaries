@@ -1,35 +1,36 @@
 /* =======================================================
-   LOGIN AUTHENTICATION SYSTEM ENGINE
+   LOGIN AUTHENTICATION SYSTEM ENGINE (FAIL-PROOF)
    ======================================================= */
 
-function handleLoginSystem(event) {
-    // Form submit hone par page refresh ko rokne ke liye
-    event.preventDefault();
+window.addEventListener("DOMContentLoaded", () => {
+    const loginForm = document.getElementById("loginForm");
 
-    // Inputs se value nikal kar space clean karna
-    const usernameInput = document.getElementById("userField").value.trim();
-    const passwordInput = document.getElementById("passField").value.trim();
-    const errorPanel = document.getElementById("loginError");
+    if (loginForm) {
+        loginForm.addEventListener("submit", (event) => {
+            // Form submit hone par native page refresh ko rokna
+            event.preventDefault();
 
-    // Static Safe Check Validation
-    // Agar dono fields khali nahi hain, toh login successful
-    if (usernameInput !== "" && passwordInput !== "") {
-        
-        // Error banner ko chhipayein
-        if (errorPanel) errorPanel.style.display = "none";
+            const usernameInput = document.getElementById("userField").value.trim();
+            const passwordInput = document.getElementById("passField").value.trim();
+            const errorPanel = document.getElementById("loginError");
 
-        // 🔥 LOCALSTORAGE FLOW UPDATER LOCKS
-        // Username ko local storage me save karna taaki homepage 'Welcome name' dikha sake
-        localStorage.setItem("savedUsername", usernameInput);
-        sessionStorage.setItem("loggedInUser", "true");
+            // Hardcoded basic check validation
+            if (usernameInput !== "" && passwordInput !== "") {
+                if (errorPanel) errorPanel.style.display = "none";
 
-        alert("Login Successful! Redirecting to shop dashboard.");
-        
-        // Homepage dashboard par send (redirect) karna
-        window.location.href = "homepage.html";
-        
-    } else {
-        // Agar koi galti hai toh invalid message highlight karein
-        if (errorPanel) errorPanel.style.display = "block";
+                // 🔥 LOCALSTORAGE UPDATER LOCKS
+                localStorage.setItem("savedUsername", usernameInput);
+                sessionStorage.setItem("loggedInUser", "true");
+
+                alert("Login Successful! Redirecting to shop dashboard.");
+                
+                // Dashboard page framework path target route
+                window.location.href = "homepage.html";
+                
+            } else {
+                // Validation fail alerts indicator show layer
+                if (errorPanel) errorPanel.style.display = "block";
+            }
+        });
     }
-}
+});
