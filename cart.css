@@ -6,6 +6,42 @@ header {
     margin: 0 !important;
     padding: 0 !important;
 }
+/* =======================================================
+   HEADER & NAVBAR HORIZONTAL STRETCH STYLING (NEW)
+   ======================================================= */
+header {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.top-banner {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 12px 0 !important;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.navbar-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 15px 40px !important;
+    margin: 0 !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+/* 🔥 NEW: Logo text ko bada aur bold karne ke liye */
+.logo {
+    font-size: 28px !important; /* Pehle se bada size */
+    font-weight: 800 !important; /* Extra bold thick look */
+    color: #333333 !important; /* Dark prominent color */
+    letter-spacing: 0.5px !important; /* Premium brand look */
+    cursor: default;
+}
 
 .top-banner {
     width: 100% !important;
