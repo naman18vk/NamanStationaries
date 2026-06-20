@@ -254,7 +254,7 @@ header {
 
 /* 🔥 NEW: Jab Clear Cart par mouse hover karein */
 .checkout-btn:hover {
-    background-color: #ff0000 !important; /* Pure Red Background */
+    background-color:#05212b !important; /* Pure Red Background */
     color: #8b0000 !important;            /* Dark Red Font Color */
     border-color: #8b0000 !important;      /* Optional: Dark Red Border */
 }
