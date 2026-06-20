@@ -240,24 +240,45 @@ header {
    ======================================================= */
 
 /* Clear Cart button ka default normal look */
+/* =======================================================
+   ACTION BUTTONS GROUP STYLING (NEW)
+   ======================================================= */
+/* Green Checkout Button Styling */
 .checkout-btn {
-    background: #2d3748;
-    color: #ffffff;
-    border: 1px solid transparent;
+    background: #27ae60 !important; /* Green color for checkout */
+    color: #ffffff !important;
+    border: none;
     padding: 12px 24px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
     font-weight: bold;
-    transition: all 0.2s ease-in-out; /* Smooth transition effect */
+    transition: background 0.2s ease-in-out;
 }
 
-/* 🔥 NEW: Jab Clear Cart par mouse hover karein */
 .checkout-btn:hover {
-    background-color:#05212b !important; /* Pure Red Background */
-    color: #ffffff !important;            /* Dark Red Font Color */
-    border-color: #8b0000 !important;      /* Optional: Dark Red Border */
+    background: #219653 !important; /* Slightly dark green on hover */
 }
+
+/* Clear Cart Button Styling */
+.clear-cart-btn {
+    background: #2d3748 !important; /* Dark Grey Default color */
+    color: #ffffff !important;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+}
+
+/* 🔥 Custom Red Hover for Clear Cart */
+.clear-cart-btn:hover {
+    background-color: #ff0000 !important; /* Red background on hover */
+    color: #8b0000 !important;            /* Dark Red text color */
+}
+
 
 /* =======================================================
    5. EMPTY CART STATES ERROR PLUGINS
