@@ -1,111 +1,103 @@
-/* =======================================================
-   NAMAN STATIONARIES - SHOPPING CART LOGIC (cart.js)
-   ======================================================= */
+// Master array copied from homepage.js to match item details based on ID
+const MASTER_PRODUCTS = [
+  { "id": "1", "name": "Bestfriend Copy", "price": "40", "image": "./image/bestfriend copy.jpg" },
+  { "id": "2", "name": "Hauser Pens", "price": "150", "image": "./image/Hauser Pens.jfif" },
+  { "id": "3", "name": "Pencil Pack", "price": "120", "image": "./image/Pencil Pack.jpg" },
+  { "id": "4", "name": "Safari Bag", "price": "1570", "image": "./image/Safari Bag.jfif" }
+];
 
-const DB_NAME = "DynamicAppDB";
-
-// पेज लोड होते ही डेटाबेस और लोकल स्टोरेज से सामान लोड करें
-document.addEventListener("DOMContentLoaded", () => {
-    loadCartItems();
+window.addEventListener("DOMContentLoaded", () => {
+    generateCartTable();
 });
 
-function loadCartItems() {
-    // 1. LocalStorage से कार्ट लिस्ट लाएँ
-    let cart = JSON.parse(localStorage.getItem("userCart")) || [];
-    const tbody = document.getElementById("cart-items-tbody");
-    const contentDiv = document.getElementById("cart-content");
+function generateCartTable() {
+    const tableBody = document.getElementById("cartTableBody");
+    const tableElement = document.getElementById("cartTable");
+    const summaryBox = document.getElementById("summaryBox");
+    const emptyMessage = document.getElementById("emptyMessage");
+    const grandTotalLabel = document.getElementById("cartGrandTotal");
 
-    // अगर कार्ट में कोई सामान नहीं है तो खाली कार्ट का मैसेज दिखाएं
-    if (cart.length === 0) {
-        contentDiv.innerHTML = `
-            <div style="text-align:center; padding: 50px 20px;">
-                <h3 style="font-size: 22px; color: #666;">Your cart is empty!</h3>
-                <p style="color: #999; margin-top: 10px;">Add some items from our shop to get started.</p>
-                <br>
-                <a href="homepage.html" class="btn-shop" style="display: inline-block;">Go Shop Now</a>
-            </div>
-        `;
+    // LocalStorage se homepage wala cart array lekar aao
+    let cartArray = JSON.parse(localStorage.getItem("userCart")) || [];
+
+    // Reset Table rows
+    tableBody.innerHTML = "";
+
+    if (cartArray.length === 0) {
+        tableElement.style.display = "none";
+        summaryBox.style.display = "none";
+        emptyMessage.style.display = "block";
         return;
     }
 
-    // 2. IndexedDB खोलकर प्रोडक्ट्स की डिटेल्स (नाम, प्राइस, इमेज) लाएँ
-    const request = indexedDB.open(DB_NAME);
+    tableElement.style.display = "table";
+    summaryBox.style.display = "flex";
+    emptyMessage.style.display = "none";
 
-    request.onsuccess = (event) => {
-        const db = event.target.result;
-        
-        // सुरक्षित चेक: अगर आइटम टेबल मौजूद नहीं है
-        if (!db.objectStoreNames.contains("Item")) {
-            console.error("Item table not found in IndexedDB");
-            return;
+    let finalGrandTotal = 0;
+
+    // Loop through user's added items
+    cartArray.forEach(cartItem => {
+        // ID ke basis par MASTER_PRODUCTS array se item details match karo
+        const originalItem = MASTER_PRODUCTS.find(p => String(p.id).trim() === String(cartItem.id).trim());
+
+        if (originalItem) {
+            const priceNum = Number(originalItem.price);
+            const quantityNum = Number(cartItem.quantity);
+            const subtotal = priceNum * quantityNum;
+            finalGrandTotal += subtotal;
+
+            // Creating Table Row
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td><img src="${originalItem.image}" alt="${originalItem.name}" class="table-img" onerror="this.src='./image/hero books.png'"></td>
+                <td><strong>${originalItem.name}</strong></td>
+                <td>Rs. ${originalItem.price}</td>
+                <td>
+                    <div class="qty-btn-container">
+                        <button onclick="updateQty('${cartItem.id}', -1)">-</button>
+                        <span class="qty-val">${cartItem.quantity}</span>
+                        <button onclick="updateQty('${cartItem.id}', 1)">+</button>
+                    </div>
+                </td>
+                <td>Rs. ${subtotal}</td>
+                <td><button class="delete-row-btn" onclick="removeItem('${cartItem.id}')">Delete</button></td>
+            `;
+            tableBody.appendChild(row);
         }
+    });
 
-        const transaction = db.transaction("Item", "readonly");
-        const store = transaction.objectStore("Item");
-        const getAllRequest = store.getAll();
-
-        getAllRequest.onsuccess = () => {
-            const allProducts = getAllRequest.result;
-            
-            // टेबल को खाली करें ताकि पुराना डेटा हट जाए
-            if (tbody) tbody.innerHTML = "";
-            let grandTotal = 0;
-
-            // लोकल स्टोरेज की कार्ट लिस्ट को IndexedDB के असली सामानों से मैच करें
-            cart.forEach(cartItem => {
-                const product = allProducts.find(p => String(p.id) === String(cartItem.id));
-
-                if (product) {
-                    let itemTotal = product.price * cartItem.quantity;
-                    grandTotal += itemTotal;
-
-                    if (tbody) {
-                        tbody.innerHTML += `
-                            <tr>
-                                <td><img src="${product.image}" class="cart-img" alt="${product.name}"></td>
-                                <td><strong>${product.name}</strong></td>
-                                <td>Rs. ${product.price}</td>
-                                <td>${cartItem.quantity}</td>
-                                <td>Rs. ${itemTotal}</td>
-                                <td>
-                                    <button class="remove-btn" onclick="removeFromCart('${cartItem.id}')">Delete</button>
-                                </td>
-                            </tr>
-                        `;
-                    }
-                }
-            });
-
-            // कुल बिल (Grand Total) को स्क्रीन पर अपडेट करें
-            const totalLabel = document.getElementById("cart-grand-total");
-            if (totalLabel) {
-                totalLabel.textContent = `Grand Total: Rs. ${grandTotal}`;
-            }
-        };
-    };
-
-    request.onerror = () => {
-        console.error("Database open failed inside cart controller logic");
-    };
+    // Update grand total display text
+    grandTotalLabel.textContent = `Rs. ${finalGrandTotal}`;
 }
 
-/* --- कार्ट से आइटम पूरी तरह हटाने का फंक्शन --- */
-function removeFromCart(productId) {
-    if (!productId) return;
+// Table ke andarr se quantity plus minus karne ke liye function
+function updateQty(productId, amount) {
+    let cartArray = JSON.parse(localStorage.getItem("userCart")) || [];
+    let item = cartArray.find(i => String(i.id).trim() === String(productId).trim());
 
-    let cart = JSON.parse(localStorage.getItem("userCart")) || [];
-    
-    // क्लिक की गई ID को छोड़कर बाकी सभी आइटम्स को फ़िल्टर करके बचाएं
-    cart = cart.filter(item => String(item.id) !== String(productId));
-    
-    // नए डेटा को वापस लोकल स्टोरेज में ओवरराइट करें
-    localStorage.setItem("userCart", JSON.stringify(cart));
-    
-    // स्क्रीन पर तुरंत नई लिस्ट दिखाने के लिए फ़ंक्शन को दोबारा चलाएँ
-    loadCartItems();
+    if (item) {
+        item.quantity += amount;
+        if (item.quantity <= 0) {
+            cartArray = cartArray.filter(i => String(i.id).trim() !== String(productId).trim());
+        }
+        localStorage.setItem("userCart", JSON.stringify(cartArray));
+        generateCartTable(); // Table refresh karo
+    }
 }
 
-/* --- चेकआउट बटन दबाने पर अलर्ट मैसेज --- */
-function checkoutAlert() {
-    alert("Thank you for your order! Your stationery items are being processed.");
+// Single item delete button function
+function removeItem(productId) {
+    let cartArray = JSON.parse(localStorage.getItem("userCart")) || [];
+    cartArray = cartArray.filter(i => String(i.id).trim() !== String(productId).trim());
+    localStorage.setItem("userCart", JSON.stringify(cartArray));
+    generateCartTable();
+}
+
+// Pure cart array ko khali karne ke liye
+function clearCart() {
+    if(confirm("Kya aap poora cart saaf karna chahte hain?")) {
+        localStorage.removeItem("userCart");
+        generateCartTable();
+    }
 }
