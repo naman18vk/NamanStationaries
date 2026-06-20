@@ -1,57 +1,35 @@
-const dbRequest = indexedDB.open("NamanWebsiteDB", 2);
+/* =======================================================
+   LOGIN AUTHENTICATION SYSTEM ENGINE
+   ======================================================= */
 
-let db;
+function handleLoginSystem(event) {
+    // Form submit hone par page refresh ko rokne ke liye
+    event.preventDefault();
 
-dbRequest.onsuccess = function(event) {
-    db = event.target.result;
-    console.log("Database connected on Login Page!");
-};
+    // Inputs se value nikal kar space clean karna
+    const usernameInput = document.getElementById("userField").value.trim();
+    const passwordInput = document.getElementById("passField").value.trim();
+    const errorPanel = document.getElementById("loginError");
 
-dbRequest.onerror = function(event) {
-    console.error("Database connection failed:", event.target.error);
-};
+    // Static Safe Check Validation
+    // Agar dono fields khali nahi hain, toh login successful
+    if (usernameInput !== "" && passwordInput !== "") {
+        
+        // Error banner ko chhipayein
+        if (errorPanel) errorPanel.style.display = "none";
 
-function checkLoginData() {
-    console.log("Login button clicked");
-    const inputName = document.getElementById('login_username').value.trim();
-    const inputPass = document.getElementById('login_password').value;
+        // 🔥 LOCALSTORAGE FLOW UPDATER LOCKS
+        // Username ko local storage me save karna taaki homepage 'Welcome name' dikha sake
+        localStorage.setItem("savedUsername", usernameInput);
+        sessionStorage.setItem("loggedInUser", "true");
 
-    if (!inputName || !inputPass) {
-        alert("Please fill all fields!");
-        return;
+        alert("Login Successful! Redirecting to shop dashboard.");
+        
+        // Homepage dashboard par send (redirect) karna
+        window.location.href = "homepage.html";
+        
+    } else {
+        // Agar koi galti hai toh invalid message highlight karein
+        if (errorPanel) errorPanel.style.display = "block";
     }
-
-    if (!db) {
-        alert("Database is not ready. Please refresh.");
-        return;
-    }
-
-    const transaction = db.transaction(["users"], "readonly");
-    const store = transaction.objectStore("users");
-    const getAllRequest = store.getAll();
-
-    getAllRequest.onsuccess = function(event) {
-        const allUsers = event.target.result;
-        let userFound = false;
-
-        for (let i = 0; i < allUsers.length; i++) {
-            if (allUsers[i].username === inputName && allUsers[i].password === inputPass) {
-                userFound = true;
-                break;
-            }
-        }
-
-        if (userFound === true) {
-            localStorage.setItem("savedUsername", inputName);
-            sessionStorage.setItem("loggedInUser", inputName);
-            window.location.href = "homepage.html"; 
-        } else {
-            alert("Invalid Username or Password! Please try again.");
-        }
-    };
-
-    getAllRequest.onerror = function(event) {
-        console.error("Error reading database:", event.target.error);
-        alert("Something went wrong during login check.");
-    };
 }
