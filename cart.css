@@ -61,6 +61,39 @@ header {
     align-items: center;
     box-sizing: border-box;
 }
+/* =======================================================
+   NAV LINKS BUTTON TYPE STYLING
+   ======================================================= */
+
+/* Nav links ki list aur unke aapas ki doori */
+.nav-links {
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Home aur Shop ke text links ko button look dene ke liye */
+.nav-links .li a {
+    font-size: 16px !important;       /* Text ko thoda bada kiya */
+    padding: 8px 16px !important;     /* Button ke andar space di */
+    border: 1px solid #e2e8f0 !important; /* Halka border button boundary ke liye */
+    border-radius: 6px !important;    /* Rounded corners button shape ke liye */
+    background-color: #f8f9fa !important; /* Soft grey background color */
+    color: #4a5568 !important;        /* Text ka professional grey color */
+    text-decoration: none !important; 
+    transition: all 0.2s ease-in-out !important; /* Smooth hover effect */
+    display: inline-block !important;
+}
+
+/* Jab user button par mouse le jaye (Hover Effect) */
+.nav-links .li a:hover {
+    background-color: #edf2f7 !important; /* Background thoda dark ho jayega */
+    color: #ff4500 !important;           /* Text orange ho jayega bina bold hue */
+    border-color: #cbd5e0 !important;     /* Border thoda clear dikhega */
+}
 
 /* =======================================================
    1. MAIN CONTAINER & STRUCTURE
