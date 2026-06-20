@@ -18,19 +18,19 @@
             Invalid Username or Password!
         </div>
 
-        <!-- Login Credentials Authentication Form Layout -->
-        <form id="loginForm" onsubmit="handleLoginSystem(event)">
+        <!-- Login Form Layout -->
+        <form id="loginForm">
             <div class="input-group">
-                <label for="userField" style="display: block; margin-bottom: 6px;">Username</label>
-                <input type="text" id="userField" placeholder="Enter your name" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;">
+                <label for="userField">Username</label>
+                <input type="text" id="userField" placeholder="Enter your name" required>
             </div>
             
             <div class="input-group" style="margin-top: 20px;">
-                <label for="passField" style="display: block; margin-bottom: 6px;">Password</label>
-                <input type="password" id="passField" placeholder="Enter your password" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;">
+                <label for="passField">Password</label>
+                <input type="password" id="passField" placeholder="Enter your password" required>
             </div>
 
-            <button type="submit" class="login-btn" style="width: 100%; padding: 12px; background-color: #ff4500; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px;">
+            <button type="submit" id="loginBtn" class="login-btn" style="margin-top: 20px;">
                 Login to Shop
             </button>
         </form>
