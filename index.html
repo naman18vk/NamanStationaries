@@ -1,33 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>NAMAN'S WEBSITE - LOGIN</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Naman Stationaries</title>
+    
+    <!-- CSS File Linking -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div class="image-container">
-        <img src="n.png" alt="NAMAN'S stationaries" style="display:block; margin:auto;">
-    </div>
-    <div class="form-container">
-        <div>
-            <h2>LOGIN - NAMAN'S WEBSITE</h2>
-            
-            <label>Enter your Name</label> <br>
-            <input type="text" id="login_username"><br><br>
-            
-            <label>Enter your Password</label> <br>
-            <input type="password" id="login_password"><br><br>
-            
-            <!-- यह बटन सीधे नीचे दिए गए JavaScript फ़ंक्शन को ट्रिगर करेगा -->
-            <button type="button" onclick="checkLoginData()">Login</button><br><br>
-            
-            <p>Don't have an account? <a href="naman.html">Register Here</a></p>
-        </div> 
-    </div> 
+<body class="login-body">
 
-    <script src="index.js">
-    
-    </script>
+    <div class="login-card">
+        <h2>Naman Stationaries</h2>
+        
+        <!-- Live Alert Error Banner Panel -->
+        <div id="loginError" class="error-message" style="display: none; color: #e53e3e; font-size: 14px; margin-bottom: 15px;">
+            Invalid Username or Password!
+        </div>
+
+        <!-- Login Credentials Authentication Form Layout -->
+        <form id="loginForm" onsubmit="handleLoginSystem(event)">
+            <div class="input-group">
+                <label for="userField" style="display: block; margin-bottom: 6px;">Username</label>
+                <input type="text" id="userField" placeholder="Enter your name" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;">
+            </div>
+            
+            <div class="input-group" style="margin-top: 20px;">
+                <label for="passField" style="display: block; margin-bottom: 6px;">Password</label>
+                <input type="password" id="passField" placeholder="Enter your password" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;">
+            </div>
+
+            <button type="submit" class="login-btn" style="width: 100%; padding: 12px; background-color: #ff4500; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px;">
+                Login to Shop
+            </button>
+        </form>
+    </div>
+
+    <!-- External JavaScript Interfacing Linking -->
+    <script src="login.js"></script>
 </body>
 </html>
