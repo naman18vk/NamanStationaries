@@ -1,84 +1,189 @@
+/* =======================================================
+   1. MAIN CONTAINER & STRUCTURE
+   ======================================================= */
 .cart-container {
-    max-width: 900px;
+    max-width: 950px;
     margin: 40px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    font-family: Arial, sans-serif;
 }
+
+.cart-container h2 {
+    color: #2c3e50;
+    font-size: 26px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #f1f1f1;
+    padding-bottom: 12px;
+}
+
+/* =======================================================
+   2. DYNAMIC CART TABLE STYLING
+   ======================================================= */
 .cart-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin-top: 15px;
+    background: #ffffff;
 }
-.cart-table th, .cart-table td {
-    padding: 12px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-}
+
 .cart-table th {
     background-color: #f8f9fa;
-    color: #333;
+    color: #34495e;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    padding: 15px 12px;
+    border-bottom: 2px solid #e2e8f0;
 }
+
+.cart-table td {
+    padding: 15px 12px;
+    text-align: center;
+    color: #4a5568;
+    font-size: 15px;
+    border-bottom: 1px solid #edf2f7;
+    vertical-align: middle;
+}
+
+/* Table Row Hover Effect */
+.cart-table tbody tr:hover {
+    background-color: #fcfcfc;
+}
+
+/* Image Wrapper Configuration */
 .table-img {
-    width: 40px;
-    height: 40px;
+    width: 65px;
+    height: 65px;
     object-fit: cover;
-    border-radius: 4px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
+
+/* =======================================================
+   3. QUANTITY UPDATER ACTION CONTROLS
+   ======================================================= */
 .qty-btn-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
+
 .qty-btn-container button {
-    padding: 4px 10px;
+    padding: 5px 12px;
     background: #ff4500;
-    color: white;
+    color: #ffffff;
     border: none;
     cursor: pointer;
     border-radius: 4px;
+    font-weight: bold;
+    font-size: 16px;
+    transition: background 0.2s ease, transform 0.1s ease;
 }
+
+.qty-btn-container button:hover {
+    background: #e03e00;
+    transform: scale(1.05);
+}
+
 .qty-val {
     font-weight: bold;
-    min-width: 20px;
+    font-size: 16px;
+    min-width: 24px;
+    text-align: center;
+    display: inline-block;
 }
+
+/* =======================================================
+   4. ROW DELETE & ENTIRE CART CLEAR ACTIONS
+   ======================================================= */
 .delete-row-btn {
-    background: #c0392b;
-    color: white;
+    background: #e53e3e;
+    color: #ffffff;
     border: none;
-    padding: 6px 12px;
+    padding: 8px 14px;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background 0.2s ease;
 }
+
+.delete-row-btn:hover {
+    background: #c53030;
+}
+
+/* Grand Total Bottom Box Panel */
 .cart-summary-box {
-    margin-top: 20px;
+    margin-top: 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px;
+    padding: 20px;
     background: #f8f9fa;
-    border-radius: 6px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
 }
+
 .grand-total {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: bold;
+    color: #2d3748;
 }
+
+.grand-total span {
+    color: #ff4500;
+}
+
 .checkout-btn {
-    background: #333;
-    color: white;
+    background: #2d3748;
+    color: #ffffff;
     border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
+    padding: 12px 24px;
+    border-radius: 6px;
     cursor: pointer;
+    font-size: 16px;
     font-weight: bold;
+    transition: background 0.2s ease;
 }
+
+.checkout-btn:hover {
+    background: #1a202c;
+}
+
+/* =======================================================
+   5. EMPTY CART STATES ERROR PLUGINS
+   ======================================================= */
 .empty-cart-msg {
     text-align: center;
-    padding: 40px 0;
+    padding: 50px 0;
 }
+
+.empty-cart-msg h3 {
+    color: #718096;
+    font-size: 20px;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
 .empty-cart-msg a {
+    display: inline-block;
     color: #ff4500;
+    text-decoration: none;
     font-weight: bold;
+    font-size: 16px;
+    border: 2px solid #ff4500;
+    padding: 10px 20px;
+    border-radius: 6px;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.empty-cart-msg a:hover {
+    background: #ff4500;
+    color: #ffffff;
 }
