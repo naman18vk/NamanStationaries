@@ -1,38 +1,39 @@
 /* =======================================================
-   HEADER & NAVBAR HORIZONTAL STRETCH STYLING (NEW)
+   HEADER & NAVBAR FIXED TOP POISTION STYLING (UPDATED)
    ======================================================= */
+
+/* Poore header container ko layout ordering dena */
 header {
     width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
-}
-/* =======================================================
-   HEADER & NAVBAR HORIZONTAL STRETCH STYLING (NEW)
-   ======================================================= */
-header {
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important; /* Isse alert strip hamesha pehle number par rahegi */
 }
 
+/* Orange Alert Bar Section Rules (Sabse Upar Rahega) */
 .top-banner {
     width: 100% !important;
     margin: 0 !important;
     padding: 12px 0 !important;
     text-align: center;
     box-sizing: border-box;
+    order: 1 !important; /* HTML layout me direction order locked kiya */
 }
 
+/* Navbar Wrapper Container Elements Configuration (Neeche Rahega) */
 .navbar-container {
     width: 100% !important;
     max-width: 100% !important;
     padding: 15px 40px !important;
     margin: 0 !important;
-    display: flex;
+    display: flex !important;
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
+    order: 2 !important; /* Banner ke exact neeche placement locked */
 }
+
 
 /* 🔥 NEW: Logo text ko bada aur bold karne ke liye */
 .logo {
