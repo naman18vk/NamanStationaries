@@ -55,7 +55,7 @@
         db.close();
         console.log("Database connection closed safely to prevent extension error.");
     };
-};
+
         dbRequest.onerror = function(event) {
     console.error("Database initialization failed:", event.target.error);
 };
