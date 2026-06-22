@@ -25,46 +25,47 @@
             <label>Re-Enter your Password</label><br> 
             <input type="password" id="Re-Enter"><br><br>
             
-           <button type="button" onclick="saveUserData()">Submit</button><br>
+            <button type="button" onclick="saveUserData()">Submit</button><br>
                 
-                <a href="index.html"><br>
-                    <div class="back-btn">
-                        Back
-                    </div>
-                </a>
-            </div> 
+            <a href="index.html"><br>
+                <div class="back-btn">Back</div>
+            </a>
         </div> 
+    </div> 
 
+    <!-- ================= JAVASCRIPT LOGIC ENGINE ================= -->
     <script> 
-        const dbRequest = indexedDB.open("NamanWebsiteDB", 3);
+        // Database open karne ki request (Version 4 taaki database clean reset ho ske)
+        const dbRequest = indexedDB.open("NamanWebsiteDB", 4);
         let db;
 
+        // Table (Object Store) banane ka function
         dbRequest.onupgradeneeded = function(event) {
             db = event.target.result;
             if (!db.objectStoreNames.contains("users")) {
                 db.createObjectStore("users", { keyPath: "srNo", autoIncrement: true });
+                console.log("Users table successfully created inside database.");
             }
         };
 
+        // Database successfully init hone par chlega (Error block completely removed from here)
         dbRequest.onsuccess = function(event) {
             db = event.target.result;
             console.log("Database initialized successfully!");
         };
 
-      db.onversionchange = function() {
-        db.close();
-        console.log("Database connection closed safely to prevent extension error.");
-    };
-
         dbRequest.onerror = function(event) {
-    console.error("Database initialization failed:", event.target.error);
-};
+            console.error("Database initialization failed:", event.target.error);
+        };
+
+        // Submit Button ka main working logic
         function saveUserData() { 
             const name = document.getElementById('username').value.trim();
-            const mobile = document.getElementById('mobile_no').value;
+            const mobile = document.getElementById('mobile_no').value.trim();
             const pass = document.getElementById('password').value;
             const repass = document.getElementById('Re-Enter').value;
 
+            // Form validations checks
             if (!name || !mobile || !pass || !repass) {
                 alert("Please fill all fields!");
                 return;
@@ -73,7 +74,6 @@
                 alert("Passwords do not match!");
                 return;
             }
-
             if (!db) {
                 alert("Database is not ready yet. Please try again.");
                 return;
@@ -86,26 +86,36 @@
                 timestamp: new Date().toLocaleString()
             };
 
-            const transaction = db.transaction(["users"], "readwrite");
-            const store = transaction.objectStore("users");
-            const addRequest = store.add(userData);
+            try {
+                const transaction = db.transaction(["users"], "readwrite");
+                const store = transaction.objectStore("users");
+                const addRequest = store.add(userData);
 
-            addRequest.onsuccess = function(event) {
-                const generatedSrNo = event.target.result;
-                alert(`Registration Successful! Serial Number: ${generatedSrNo}`);
-                
-                document.getElementById('username').value = "";
-                document.getElementById('mobile_no').value = "";
-                document.getElementById('password').value = "";
-                document.getElementById('Re-Enter').value = "";
-                
-                window.location.href = "index.html";
-            };
+                addRequest.onsuccess = function(event) {
+                    const generatedSrNo = event.target.result;
+                    alert(`Registration Successful! Serial Number: ${generatedSrNo}`);
+                    
+                    // Input elements data clear
+                    document.getElementById('username').value = "";
+                    document.getElementById('mobile_no').value = "";
+                    document.getElementById('password').value = "";
+                    document.getElementById('Re-Enter').value = "";
+                    
+                    // Dynamic username synchronization for homepage greeting
+                    localStorage.setItem("savedUsername", name);
+                    
+                    // Redirect to Login page
+                    window.location.href = "index.html";
+                };
 
-            addRequest.onerror = function(event) {
-                console.error("Error saving user:", event.target.error);
-                alert("Failed to save data to the database.");
-            };
+                addRequest.onerror = function(event) {
+                    console.error("Error saving user data:", event.target.error);
+                    alert("Failed to save data to the database.");
+                };
+            } catch (error) {
+                console.error("Transaction Error:", error);
+                alert("Database store error. Please refresh and try again.");
+            }
         }
     </script>
 </body>
