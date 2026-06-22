@@ -51,10 +51,14 @@
             console.log("Database initialized successfully!");
         };
 
+      db.onversionchange = function() {
+        db.close();
+        console.log("Database connection closed safely to prevent extension error.");
+    };
+};
         dbRequest.onerror = function(event) {
-            console.error("Database initialization failed:", event.target.error);
-        };
-
+    console.error("Database initialization failed:", event.target.error);
+};
         function saveUserData() { 
             const name = document.getElementById('username').value.trim();
             const mobile = document.getElementById('mobile_no').value;
