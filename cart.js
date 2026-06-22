@@ -145,3 +145,13 @@ function closeReceipt() {
     localStorage.removeItem("userCart");
     generateCartTable();
 }
+/* -------------------------------------------------------
+   🔥 NEW: BACK BUTTON CONTROLLER FROM RECEIPT MODAL
+   ------------------------------------------------------- */
+function goBackToCartFromBill() {
+    // Receipt Modal ko bina data khali kiye sirf chhupayein
+    document.getElementById("receiptModal").style.display = "none";
+    
+    // Table ko waapas reload karein taaki user ko saari items dikhein
+    generateCartTable();
+}
