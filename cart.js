@@ -115,6 +115,9 @@ function openReceiptBill() {
     const receiptTotal = document.querySelectorAll("#receiptGrandTotal");
     const receiptDate = document.getElementById("receiptDate");
     const receiptTxn = document.getElementById("receiptTxn");
+    
+    // Bill par username dikhane ke liye target element catch kiya
+    const receiptUserLabel = document.getElementById("receiptUser");
 
     receiptBody.innerHTML = "";
 
@@ -132,10 +135,16 @@ function openReceiptBill() {
         }
     });
 
-    // Update total in receipt modal
+    // Update total in receipt modal instances
     receiptTotal.forEach(el => el.textContent = `Rs. ${globalTotalBill}`);
     receiptDate.textContent = `Date: ${new Date().toLocaleDateString()} | Time: ${new Date().toLocaleTimeString()}`;
     receiptTxn.textContent = `TXN ID: NS${Math.floor(100000 + Math.random() * 900000)}`;
+
+    // 🔥 LocalStorage se saved log-in username nikal kar bill me print karna
+    const currentLoggedUser = localStorage.getItem("savedUsername") || "Customer";
+    if (receiptUserLabel) {
+        receiptUserLabel.textContent = `Welcome: ${currentLoggedUser}`;
+    }
 
     modal.style.display = "flex";
 }
@@ -145,27 +154,12 @@ function closeReceipt() {
     localStorage.removeItem("userCart");
     generateCartTable();
 }
+
 /* -------------------------------------------------------
-   🔥 NEW: BACK BUTTON CONTROLLER FROM RECEIPT MODAL
+   5. 🔥 NEW: BACK BUTTON CONTROLLER FROM RECEIPT MODAL
    ------------------------------------------------------- */
 function goBackToCartFromBill() {
-    // Receipt Modal ko bina data khali kiye sirf chhupayein
+    // Bina cart data khali kiye sirf popup bill modal ko band karna
     document.getElementById("receiptModal").style.display = "none";
-    
-    // Table ko waapas reload karein taaki user ko saari items dikhein
     generateCartTable();
 }
-/* -------------------------------------------------------
-   BUTTON FUNCTION 2: PROCEED TO CHECKOUT (Show Invoice Bill)
-   ------------------------------------------------------- */
-function openReceiptBill() {
-    let cartArray = JSON.parse(localStorage.getItem("userCart")) || [];
-    if (cartArray.length === 0) return;
-
-    const modal = document.getElementById("receiptModal");
-    const receiptBody = document.getElementById("receiptItemsBody");
-    const receiptTotal = document.querySelectorAll("#receiptGrandTotal");
-    const receiptDate = document.getElementById("receiptDate");
-    const receiptTxn = document.getElementById("receiptTxn");
- 
- 
