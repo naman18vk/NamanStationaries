@@ -143,7 +143,7 @@ function openReceiptBill() {
     // 🔥 LocalStorage se saved log-in username nikal kar bill me print karna
     const currentLoggedUser = localStorage.getItem("savedUsername") || "Customer";
     if (receiptUserLabel) {
-        receiptUserLabel.textContent = `Welcome: ${currentLoggedUser}`;
+        receiptUserLabel.textContent = `NAME: ${currentLoggedUser}`;
     }
 
     modal.style.display = "flex";
