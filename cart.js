@@ -143,7 +143,7 @@ function openReceiptBill() {
     // LocalStorage se saved log-in username nikal kar bill me Pure Black color me print karna
     const currentLoggedUser = localStorage.getItem("savedUsername") || "Customer";
     if (receiptUserLabel) {
-        receiptUserLabel.textContent = `Welcome: ${currentLoggedUser}`;
+        receiptUserLabel.textContent = `NAME: ${currentLoggedUser}`;
         receiptUserLabel.style.color = "#000000"; // Dynamic script text block forced color reset
     }
 
