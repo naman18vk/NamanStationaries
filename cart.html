@@ -8,6 +8,8 @@
     <!-- CSS File Linking -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="cart.css">
+    <!-- Faltu favicon error ko console me rokne ke liye -->
+    <link rel="icon" href="data:,">
 </head>
 <body class="cart-page">
 
@@ -68,10 +70,14 @@
             <!-- Close Modal Trigger -->
             <button onclick="closeReceipt()" style="position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 22px; cursor: pointer; font-weight: bold; color: #666;">&times;</button>
             
-            <!-- Invoice Invoice Formatting Headers -->
+            <!-- Invoice Formatting Headers -->
             <div style="text-align: center; border-bottom: 2px dashed #333; padding-bottom: 15px; margin-bottom: 15px;">
                 <h2 style="margin: 0; font-size: 22px; text-transform: uppercase;">Naman Stationaries</h2>
                 <p style="margin: 5px 0 0 0; font-size: 13px; color: #555;">Official Invoice Receipt</p>
+                
+                <!-- 🔥 NEW: Bill ke andar username welcome dikhane ke liye element -->
+                <p id="receiptUser" style="margin: 5px 0 0 0; font-size: 14px; font-weight: bold; color: #ff4500; text-transform: capitalize;"></p>
+                
                 <p id="receiptDate" style="margin: 5px 0 0 0; font-size: 12px; color: #777;"></p>
                 <p id="receiptTxn" style="margin: 3px 0 0 0; font-size: 12px; font-weight: bold; color: #333;"></p>
             </div>
@@ -102,27 +108,19 @@
                 </div>
             </div>
 
-      
-                          <!-- Invoice Greetings and Print/Back Utility Footer -->
+            <!-- Receipt Greetings and Native Print Controls Trigger -->
             <div style="text-align: center; margin-top: 25px; font-size: 12px; color: #555; border-top: 1px solid #eee; padding-top: 15px;">
                 <p style="margin: 0;">Thank you for shopping with us!</p>
                 <p style="margin: 5px 0 0 0; font-weight: bold;">Visit Again!</p>
                 
-                <!-- Buttons Wrapper Group Side-by-Side Flex Layout -->
+                <!-- 🔥 UPDATED: Print aur Back button side-by-side flex layout group -->
                 <div style="display: flex; justify-content: center; gap: 15px; margin-top: 15px;">
-                    <!-- Print Button -->
                     <button onclick="window.print()" style="padding: 8px 18px; background: #2d3748; color: white; border: none; border-radius: 4px; cursor: pointer; font-family: Arial, sans-serif; font-size: 12px; font-weight: bold;">Print Receipt</button>
-                    
-                    <!-- 🔥 NEW: Back Button (Sirf modal close karega, cart khali nahi karega) -->
                     <button onclick="goBackToCartFromBill()" style="padding: 8px 18px; background: #718096; color: white; border: none; border-radius: 4px; cursor: pointer; font-family: Arial, sans-serif; font-size: 12px; font-weight: bold;">Back</button>
                 </div>
             </div>
-
-            </div>
         </div>
     </div>
-                <!-- Receipt Header Branding Invoice Area -->
-          
 
     <!-- External JavaScript Interfacing Linking -->
     <script src="cart.js"></script>
