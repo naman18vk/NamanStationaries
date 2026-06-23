@@ -155,3 +155,48 @@ function goBackToCartFromBill() {
     // Table ko waapas reload karein taaki user ko saari items dikhein
     generateCartTable();
 }
+/* -------------------------------------------------------
+   BUTTON FUNCTION 2: PROCEED TO CHECKOUT (Show Invoice Bill)
+   ------------------------------------------------------- */
+function openReceiptBill() {
+    let cartArray = JSON.parse(localStorage.getItem("userCart")) || [];
+    if (cartArray.length === 0) return;
+
+    const modal = document.getElementById("receiptModal");
+    const receiptBody = document.getElementById("receiptItemsBody");
+    const receiptTotal = document.querySelectorAll("#receiptGrandTotal");
+    const receiptDate = document.getElementById("receiptDate");
+    const receiptTxn = document.getElementById("receiptTxn");
+    
+    // 🔥 NEW: Bill par logged-in username target karne ke liye label chuna
+    const receiptUserLabel = document.getElementById("receiptUser");
+
+    receiptBody.innerHTML = "";
+
+    cartArray.forEach(cartItem => {
+        const itemInfo = MASTER_PRODUCTS.find(p => String(p.id).trim() === String(cartItem.id).trim());
+        if (itemInfo) {
+            const subtotal = Number(itemInfo.price) * Number(cartItem.quantity);
+            receiptBody.innerHTML += `
+                <tr style="border-bottom: 1px dotted #eee;">
+                    <td style="padding: 6px 0; text-align: left;">${itemInfo.name}</td>
+                    <td style="text-align: center; padding: 6px 0;">${cartItem.quantity}</td>
+                    <td style="text-align: right; padding: 6px 0;">Rs. ${subtotal}</td>
+                </tr>
+            `;
+        }
+    });
+
+    // Update total, date and unique transaction id
+    receiptTotal.forEach(el => el.textContent = `Rs. ${globalTotalBill}`);
+    receiptDate.textContent = `Date: ${new Date().toLocaleDateString()} | Time: ${new Date().toLocaleTimeString()}`;
+    receiptTxn.textContent = `TXN ID: NS${Math.floor(100000 + Math.random() * 900000)}`;
+
+    // 🔥 NEW: LocalStorage se saved username read karke bill me 'Welcome Name' insert karna
+    const currentLoggedUser = localStorage.getItem("savedUsername") || "Customer";
+    if (receiptUserLabel) {
+        receiptUserLabel.textContent = `Welcome: ${currentLoggedUser}`;
+    }
+
+    modal.style.display = "flex";
+}
