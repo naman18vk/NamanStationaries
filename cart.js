@@ -164,3 +164,61 @@ function goBackToCartFromBill() {
     document.getElementById("receiptModal").style.display = "none";
     generateCartTable();
 }
+function openReceiptBill() {
+    let cartArray = JSON.parse(localStorage.getItem("userCart")) || [];
+    if (cartArray.length === 0) return;
+
+    const modal = document.getElementById("receiptModal");
+    const receiptBody = document.getElementById("receiptItemsBody");
+    const receiptTotal = document.querySelectorAll("#receiptGrandTotal");
+    const receiptDate = document.getElementById("receiptDate");
+    const receiptTxn = document.getElementById("receiptTxn");
+    const receiptUserLabel = document.getElementById("receiptUser");
+
+    receiptBody.innerHTML = "";
+    
+    // 📦 NEW: Is specific bill ke saare items ko track karne ke liye temporary array
+    let currentInvoiceItems = [];
+
+    cartArray.forEach(cartItem => {
+        const itemInfo = MASTER_PRODUCTS.find(p => String(p.id).trim() === String(cartItem.id).trim());
+        if (itemInfo) {
+            const subtotal = Number(itemInfo.price) * Number(cartItem.quantity);
+            receiptBody.innerHTML += `
+                <tr style="border-bottom: 1px dotted #eee;">
+                    <td style="padding: 6px 0; text-align: left;">${itemInfo.name}</td>
+                    <td style="text-align: center; padding: 6px 0;">${cartItem.quantity}</td>
+                    <td style="text-align: right; padding: 6px 0;">Rs. ${subtotal}</td>
+                </tr>
+            `;
+
+            // Items ka clean detailed array structure taiyar kiya
+            currentInvoiceItems.push({
+                productName: itemInfo.name,
+                quantity: cartItem.quantity,
+                pricePerUnit: itemInfo.price,
+                itemSubtotal: subtotal
+            });
+        }
+    });
+
+    // Dynamic strings generation variables
+    const generatedTxnId = `NS${Math.floor(100000 + Math.random() * 900000)}`;
+    const currentTimestamp = `Date: ${new Date().toLocaleDateString()} | Time: ${new Date().toLocaleTimeString()}`;
+    const currentLoggedUser = localStorage.getItem("savedUsername") || "Customer";
+
+    // UI elements content replacement
+    receiptTotal.forEach(el => el.textContent = `Rs. ${globalTotalBill}`);
+    receiptDate.textContent = currentTimestamp;
+    receiptTxn.textContent = `TXN ID: ${generatedTxnId}`;
+
+    if (receiptUserLabel) {
+        receiptUserLabel.textContent = `Welcome: ${currentLoggedUser}`;
+        receiptUserLabel.style.color = "#000000";
+    }
+
+    // 🔥 NEW MASTER TRIGGER: orders.js ke ALL_COMPLETED_ORDERS array me data safely push kiya
+    saveNewInvoiceToHistory(generatedTxnId, currentLoggedUser, currentTimestamp, currentInvoiceItems, globalTotalBill);
+
+    modal.style.display = "flex";
+}
