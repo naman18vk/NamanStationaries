@@ -156,7 +156,7 @@ function openReceiptBill() {
         receiptUserLabel.textContent = `Welcome: ${currentLoggedUser}`;
         receiptUserLabel.style.color = "#000000";
     }
-
+    writeOrderToPermanentDB(generatedTxnId, currentLoggedUser, currentTimestamp, currentInvoiceItems, globalTotalBill);
     saveNewInvoiceToHistory(generatedTxnId, currentLoggedUser, currentTimestamp, currentInvoiceItems, globalTotalBill);
     modal.style.display = "flex";
 }
