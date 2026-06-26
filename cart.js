@@ -159,7 +159,16 @@ function openReceiptBill() {
 
     // 🚀 INLINE TRIGGER: Isi file ke permanent database write block ko call kiya
     writeOrderToPermanentDB(generatedTxnId, currentLoggedUser, currentTimestamp, currentInvoiceItems, globalTotalBill);
-
+    let tempOrders = JSON.parse(localStorage.getItem("NamanPermanentOrders")) || [];
+        tempOrders.push({
+            transactionId: generatedTxnId,
+            customer: currentLoggedUser,
+            dateTime: currentTimestamp,
+            purchasedItems: currentInvoiceItems,
+            grandTotal: globalTotalBill,
+            paymentStatus: "PAID (COD)"
+        });
+        localStorage.setItem("NamanPermanentOrders", JSON.stringify(tempOrders));
     modal.style.display = "flex";
 }
 
