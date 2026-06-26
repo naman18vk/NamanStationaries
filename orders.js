@@ -2,8 +2,8 @@
    MASTER ORDERS DATABASE STORAGE ARRAY
    ======================================================= */
 
-// Yeh khali array har ek generated invoice/bill ko apne andar store karega
-const ALL_COMPLETED_ORDERS = [];
+// Yeh array har ek generated invoice/bill ko apne andar store karega (LocalStorage se data uthayega)
+const ALL_COMPLETED_ORDERS = JSON.parse(localStorage.getItem("NamanPermanentOrders")) || [];
 
 /**
  * Naye bill ka poora data is array me push karne ka master function
@@ -28,6 +28,18 @@ function saveNewInvoiceToHistory(txnId, customerName, dateString, itemsList, fin
     // Array me data inject kiya
     ALL_COMPLETED_ORDERS.push(newOrderInvoice);
 
+    // 🚀 NEW CODE: Data ko permanent save kiya taaki page reload par delete na ho
+    localStorage.setItem("NamanPermanentOrders", JSON.stringify(ALL_COMPLETED_ORDERS));
+
     // Testing ke liye console me poora record registry print karke check karein
     console.log("🔥 SUCCESS: Bill Data saved to Master Orders Array History!", ALL_COMPLETED_ORDERS);
 }
+
+// 🚀 NEW CODE: Jab bhi kisi dusre tab/file (jaise cart.js) se data save ho, ye array real-time me update ho jaye
+window.addEventListener("storage", (e) => {
+    if (e.key === "NamanPermanentOrders") {
+        ALL_COMPLETED_ORDERS.length = 0; // Puraane array ko clear kiya
+        ALL_COMPLETED_ORDERS.push(...JSON.parse(e.newValue || "[]")); // Naya data load kiya
+        console.log("🔄 SYNC: Array updated from another file!", ALL_COMPLETED_ORDERS);
+    }
+});
