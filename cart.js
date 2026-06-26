@@ -157,7 +157,18 @@ function openReceiptBill() {
         receiptUserLabel.style.color = "#000000";
     }
     writeOrderToPermanentDB(generatedTxnId, currentLoggedUser, currentTimestamp, currentInvoiceItems, globalTotalBill);
-    saveNewInvoiceToHistory(generatedTxnId, currentLoggedUser, currentTimestamp, currentInvoiceItems, globalTotalBill);
+     // 🚀 2. NEW CODE: order.js ke logic me data bhejna (via LocalStorage Bridge)
+    let tempOrders = JSON.parse(localStorage.getItem("NamanPermanentOrders")) || [];
+    tempOrders.push({
+        transactionId: generatedTxnId,
+        customer: currentLoggedUser,
+        dateTime: currentTimestamp,
+        purchasedItems: currentInvoiceItems,
+        grandTotal: globalTotalBill,
+        paymentStatus: "PAID (COD)"
+    });
+    localStorage.setItem("NamanPermanentOrders", JSON.stringify(tempOrders));
+
     modal.style.display = "flex";
 }
 
