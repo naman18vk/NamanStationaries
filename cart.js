@@ -1,4 +1,6 @@
-// Master products array reference mapping keys
+// =======================================================
+// 1. MASTER PRODUCTS REGISTRY
+// =======================================================
 const MASTER_PRODUCTS = [
   { "id": "1", "name": "Bestfriend Copy", "price": "40", "image": "./image/bestfriend copy.jpg" },
   { "id": "2", "name": "Hauser Pens", "price": "150", "image": "./image/Hauser Pens.jfif" },
@@ -8,12 +10,19 @@ const MASTER_PRODUCTS = [
 
 let globalTotalBill = 0;
 
+// =======================================================
+// 2. PERMANENT ORDERS DATABASE SYSTEM VARIABLES
+// =======================================================
+const ORDERS_DB_NAME = "NamanOrdersDB";
+const ORDERS_STORE_NAME = "OrderHistory";
+const ORDERS_DB_VERSION = 1;
+
 window.addEventListener("DOMContentLoaded", () => {
     generateCartTable();
 });
 
 /* -------------------------------------------------------
-   1. MAIN ENGINE: GENERATE CART LIST VIEW TABLE
+   CORE ENGINE: GENERATE CART LIST VIEW TABLE
    ------------------------------------------------------- */
 function generateCartTable() {
     const tableBody = document.getElementById("cartTableBody");
@@ -22,7 +31,6 @@ function generateCartTable() {
     const emptyMessage = document.getElementById("emptyMessage");
     const grandTotalLabel = document.getElementById("cartGrandTotal");
 
-    // LocalStorage se saved array fetch karein
     let cartArray = JSON.parse(localStorage.getItem("userCart")) || [];
     tableBody.innerHTML = "";
 
@@ -40,7 +48,6 @@ function generateCartTable() {
     globalTotalBill = 0;
 
     cartArray.forEach(cartItem => {
-        // ID ke basis par details match karein
         const originalItem = MASTER_PRODUCTS.find(p => String(p.id).trim() === String(cartItem.id).trim());
 
         if (originalItem) {
@@ -69,9 +76,6 @@ function generateCartTable() {
     grandTotalLabel.textContent = `Rs. ${globalTotalBill}`;
 }
 
-/* -------------------------------------------------------
-   2. TRANSACTION CONTROLLERS: PLUS, MINUS & REMOVE
-   ------------------------------------------------------- */
 function updateQty(productId, amount) {
     let cartArray = JSON.parse(localStorage.getItem("userCart")) || [];
     let item = cartArray.find(i => String(i.id).trim() === String(productId).trim());
@@ -93,9 +97,6 @@ function removeItem(productId) {
     generateCartTable();
 }
 
-/* -------------------------------------------------------
-   3. BUTTON FUNCTION 1: ONLY CLEAR CART (No Invoice PopUp)
-   ------------------------------------------------------- */
 function clearCartOnly() {
     if (confirm("Kya aap poora cart saaf karna chahte hain?")) {
         localStorage.removeItem("userCart");
@@ -104,66 +105,8 @@ function clearCartOnly() {
 }
 
 /* -------------------------------------------------------
-   4. BUTTON FUNCTION 2: PROCEED TO CHECKOUT (Show Invoice Bill)
+   🔥 PROCEED TO CHECKOUT (Show Invoice & Initialize DB Entry)
    ------------------------------------------------------- */
-function openReceiptBill() {
-    let cartArray = JSON.parse(localStorage.getItem("userCart")) || [];
-    if (cartArray.length === 0) return;
-
-    const modal = document.getElementById("receiptModal");
-    const receiptBody = document.getElementById("receiptItemsBody");
-    const receiptTotal = document.querySelectorAll("#receiptGrandTotal");
-    const receiptDate = document.getElementById("receiptDate");
-    const receiptTxn = document.getElementById("receiptTxn");
-    
-    // Bill par username dikhane ke liye target element catch kiya
-    const receiptUserLabel = document.getElementById("receiptUser");
-
-    receiptBody.innerHTML = "";
-
-    cartArray.forEach(cartItem => {
-        const itemInfo = MASTER_PRODUCTS.find(p => String(p.id).trim() === String(cartItem.id).trim());
-        if (itemInfo) {
-            const subtotal = Number(itemInfo.price) * Number(cartItem.quantity);
-            receiptBody.innerHTML += `
-                <tr style="border-bottom: 1px dotted #eee;">
-                    <td style="padding: 6px 0; text-align: left;">${itemInfo.name}</td>
-                    <td style="text-align: center; padding: 6px 0;">${cartItem.quantity}</td>
-                    <td style="text-align: right; padding: 6px 0;">Rs. ${subtotal}</td>
-                </tr>
-            `;
-        }
-    });
-
-    // Update total in receipt modal instances
-    receiptTotal.forEach(el => el.textContent = `Rs. ${globalTotalBill}`);
-    receiptDate.textContent = `Date: ${new Date().toLocaleDateString()} | Time: ${new Date().toLocaleTimeString()}`;
-    receiptTxn.textContent = `TXN ID: NS${Math.floor(100000 + Math.random() * 900000)}`;
-
-    // LocalStorage se saved log-in username nikal kar bill me Pure Black color me print karna
-    const currentLoggedUser = localStorage.getItem("savedUsername") || "Customer";
-    if (receiptUserLabel) {
-        receiptUserLabel.textContent = `NAME: ${currentLoggedUser}`;
-        receiptUserLabel.style.color = "#000000"; // Dynamic script text block forced color reset
-    }
-
-    modal.style.display = "flex";
-}
-
-function closeReceipt() {
-    document.getElementById("receiptModal").style.display = "none";
-    localStorage.removeItem("userCart");
-    generateCartTable();
-}
-
-/* -------------------------------------------------------
-   5. BACK BUTTON CONTROLLER FROM RECEIPT MODAL
-   ------------------------------------------------------- */
-function goBackToCartFromBill() {
-    // Bina cart data khali kiye sirf popup bill modal ko band karna
-    document.getElementById("receiptModal").style.display = "none";
-    generateCartTable();
-}
 function openReceiptBill() {
     let cartArray = JSON.parse(localStorage.getItem("userCart")) || [];
     if (cartArray.length === 0) return;
@@ -177,7 +120,7 @@ function openReceiptBill() {
 
     receiptBody.innerHTML = "";
     
-    // 📦 NEW: Is specific bill ke saare items ko track karne ke liye temporary array
+    // Ordered items ki details list backup table array
     let currentInvoiceItems = [];
 
     cartArray.forEach(cartItem => {
@@ -192,7 +135,6 @@ function openReceiptBill() {
                 </tr>
             `;
 
-            // Items ka clean detailed array structure taiyar kiya
             currentInvoiceItems.push({
                 productName: itemInfo.name,
                 quantity: cartItem.quantity,
@@ -202,12 +144,10 @@ function openReceiptBill() {
         }
     });
 
-    // Dynamic strings generation variables
     const generatedTxnId = `NS${Math.floor(100000 + Math.random() * 900000)}`;
     const currentTimestamp = `Date: ${new Date().toLocaleDateString()} | Time: ${new Date().toLocaleTimeString()}`;
     const currentLoggedUser = localStorage.getItem("savedUsername") || "Customer";
 
-    // UI elements content replacement
     receiptTotal.forEach(el => el.textContent = `Rs. ${globalTotalBill}`);
     receiptDate.textContent = currentTimestamp;
     receiptTxn.textContent = `TXN ID: ${generatedTxnId}`;
@@ -217,8 +157,67 @@ function openReceiptBill() {
         receiptUserLabel.style.color = "#000000";
     }
 
-    // 🔥 NEW MASTER TRIGGER: orders.js ke ALL_COMPLETED_ORDERS array me data safely push kiya
-    saveNewInvoiceToHistory(generatedTxnId, currentLoggedUser, currentTimestamp, currentInvoiceItems, globalTotalBill);
+    // 🚀 INLINE TRIGGER: Isi file ke permanent database write block ko call kiya
+    writeOrderToPermanentDB(generatedTxnId, currentLoggedUser, currentTimestamp, currentInvoiceItems, globalTotalBill);
 
     modal.style.display = "flex";
+}
+
+function closeReceipt() {
+    document.getElementById("receiptModal").style.display = "none";
+    localStorage.removeItem("userCart");
+    generateCartTable();
+}
+
+function goBackToCartFromBill() {
+    document.getElementById("receiptModal").style.display = "none";
+    generateCartTable();
+}
+
+/* -------------------------------------------------------
+   🔒 WRITER UTILITY: CREATE AND WRITE IN NAMANORDERSDB
+   ------------------------------------------------------- */
+function writeOrderToPermanentDB(txnId, customerName, dateString, itemsList, finalBillAmount) {
+    // Open direct connection request
+    const dbRequest = indexedDB.open(ORDERS_DB_NAME, ORDERS_DB_VERSION);
+
+    dbRequest.onupgradeneeded = function(event) {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains(ORDERS_STORE_NAME)) {
+            db.createObjectStore(ORDERS_STORE_NAME, { keyPath: "transactionId" });
+            console.log("Database Engine: 'OrderHistory' object store auto-generated successfully.");
+        }
+    };
+
+    dbRequest.onsuccess = function(event) {
+        const db = event.target.result;
+        const transaction = db.transaction(ORDERS_STORE_NAME, "readwrite");
+        const store = transaction.objectStore(ORDERS_STORE_NAME);
+
+        const orderInvoicePayload = {
+            transactionId: txnId,
+            customer: customerName,
+            dateTime: dateString,
+            purchasedItems: itemsList, 
+            grandTotal: finalBillAmount,
+            paymentStatus: "PAID (COD)"
+        };
+
+        // Table me item permanently write kiya
+        const addRequest = store.add(orderInvoicePayload);
+
+        addRequest.onsuccess = function() {
+            console.log(`🎉 PERMANENT SYNC: Bill ${txnId} has been successfully locked in IndexedDB!`);
+        };
+
+        addRequest.onerror = function(e) {
+            console.error("IndexedDB Row insert failed:", e.target.error);
+        };
+
+        transaction.oncomplete = () => db.close();
+    };
+
+    dbRequest.onerror = function(event) {
+        console.error("NamanOrdersDB open failures:", event.target.error);
+    };
 }
