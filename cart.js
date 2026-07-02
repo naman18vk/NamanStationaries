@@ -10,13 +10,6 @@ const MASTER_PRODUCTS = [
 
 let globalTotalBill = 0;
 
-// =======================================================
-// 2. PERMANENT ORDERS DATABASE SYSTEM VARIABLES
-// =======================================================
-const ORDERS_DB_NAME = "NamanOrdersDB";
-const ORDERS_STORE_NAME = "OrderHistory";
-const ORDERS_DB_VERSION = 1;
-
 window.addEventListener("DOMContentLoaded", () => {
     generateCartTable();
 });
@@ -105,7 +98,7 @@ function clearCartOnly() {
 }
 
 /* -------------------------------------------------------
-   🔥 PROCEED TO CHECKOUT (Show Invoice & Initialize DB Entry)
+   🔥 PROCEED TO CHECKOUT (Show Invoice & Array Entry)
    ------------------------------------------------------- */
 function openReceiptBill() {
     let cartArray = JSON.parse(localStorage.getItem("userCart")) || [];
@@ -120,7 +113,6 @@ function openReceiptBill() {
 
     receiptBody.innerHTML = "";
     
-    // Ordered items ki details list backup table array
     let currentInvoiceItems = [];
 
     cartArray.forEach(cartItem => {
@@ -157,10 +149,7 @@ function openReceiptBill() {
         receiptUserLabel.style.color = "#000000";
     }
 
-    // 1. Aapka permanent IndexedDB write method
-    writeOrderToPermanentDB(generatedTxnId, currentLoggedUser, currentTimestamp, currentInvoiceItems, globalTotalBill);
-
-    // 🚀 2. FIXED: Custom Event ke zariye data bhejna (Zero script loading conflict)
+    // 🚀 CUSTOM EVENT: Data ko direct order.js ke ARRAY me bhejenge
     const orderDataPayload = {
         txnId: generatedTxnId,
         customerName: currentLoggedUser,
@@ -184,52 +173,4 @@ function closeReceipt() {
 function goBackToCartFromBill() {
     document.getElementById("receiptModal").style.display = "none";
     generateCartTable();
-}
-
-/* -------------------------------------------------------
-   🔒 WRITER UTILITY: CREATE AND WRITE IN NAMANORDERSDB
-   ------------------------------------------------------- */
-function writeOrderToPermanentDB(txnId, customerName, dateString, itemsList, finalBillAmount) {
-    // Open direct connection request
-    const dbRequest = indexedDB.open(ORDERS_DB_NAME, ORDERS_DB_VERSION);
-
-    dbRequest.onupgradeneeded = function(event) {
-        const db = event.target.result;
-        if (!db.objectStoreNames.contains(ORDERS_STORE_NAME)) {
-            db.createObjectStore(ORDERS_STORE_NAME, { keyPath: "transactionId" });
-            console.log("Database Engine: 'OrderHistory' object store auto-generated successfully.");
-        }
-    };
-
-    dbRequest.onsuccess = function(event) {
-        const db = event.target.result;
-        const transaction = db.transaction(ORDERS_STORE_NAME, "readwrite");
-        const store = transaction.objectStore(ORDERS_STORE_NAME);
-
-        const orderInvoicePayload = {
-            transactionId: txnId,
-            customer: customerName,
-            dateTime: dateString,
-            purchasedItems: itemsList, 
-            grandTotal: finalBillAmount,
-            paymentStatus: "PAID (COD)"
-        };
-
-        // Table me item permanently write kiya
-        const addRequest = store.add(orderInvoicePayload);
-
-        addRequest.onsuccess = function() {
-            console.log(`🎉 PERMANENT SYNC: Bill ${txnId} has been successfully locked in IndexedDB!`);
-        };
-
-        addRequest.onerror = function(e) {
-            console.error("IndexedDB Row insert failed:", e.target.error);
-        };
-
-        transaction.oncomplete = () => db.close();
-    };
-
-    dbRequest.onerror = function(event) {
-        console.error("NamanOrdersDB open failures:", event.target.error);
-    };
 }
