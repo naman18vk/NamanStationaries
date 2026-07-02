@@ -120,7 +120,6 @@ function openReceiptBill() {
 
     receiptBody.innerHTML = "";
     
-    // Ordered items ki details list backup table array
     let currentInvoiceItems = [];
 
     cartArray.forEach(cartItem => {
@@ -156,18 +155,16 @@ function openReceiptBill() {
         receiptUserLabel.textContent = `Welcome: ${currentLoggedUser}`;
         receiptUserLabel.style.color = "#000000";
     }
+
+    // Aapka existing DB function
     writeOrderToPermanentDB(generatedTxnId, currentLoggedUser, currentTimestamp, currentInvoiceItems, globalTotalBill);
-     // 🚀 2. NEW CODE: order.js ke logic me data bhejna (via LocalStorage Bridge)
-    let tempOrders = JSON.parse(localStorage.getItem("NamanPermanentOrders")) || [];
-    tempOrders.push({
-        transactionId: generatedTxnId,
-        customer: currentLoggedUser,
-        dateTime: currentTimestamp,
-        purchasedItems: currentInvoiceItems,
-        grandTotal: globalTotalBill,
-        paymentStatus: "PAID (COD)"
-    });
-    localStorage.setItem("NamanPermanentOrders", JSON.stringify(tempOrders));
+
+    // 🚀 FIXED DIRECT CALL: Global scope se function ko call kiya safely
+    if (typeof window.saveNewInvoiceToHistory === "function") {
+        window.saveNewInvoiceToHistory(generatedTxnId, currentLoggedUser, currentTimestamp, currentInvoiceItems, globalTotalBill);
+    } else {
+        console.error("❌ ERROR: order.js ka saveNewInvoiceToHistory function nahi mila! Check karein script order.");
+    }
 
     modal.style.display = "flex";
 }
