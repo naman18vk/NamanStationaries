@@ -160,12 +160,17 @@ function openReceiptBill() {
     // 1. Aapka permanent IndexedDB write method
     writeOrderToPermanentDB(generatedTxnId, currentLoggedUser, currentTimestamp, currentInvoiceItems, globalTotalBill);
 
-    // 🚀 2. DIRECT TRIGGER: order.js ke global function me data push karna safely
-    if (typeof window.saveNewInvoiceToHistory === "function") {
-        window.saveNewInvoiceToHistory(generatedTxnId, currentLoggedUser, currentTimestamp, currentInvoiceItems, globalTotalBill);
-    } else {
-        console.warn("⚠️ Warning: order.js ka function abhi load nahi hua hai. Script tags ka order check karein!");
-    }
+    // 🚀 2. FIXED: Custom Event ke zariye data bhejna (Zero script loading conflict)
+    const orderDataPayload = {
+        txnId: generatedTxnId,
+        customerName: currentLoggedUser,
+        dateString: currentTimestamp,
+        itemsList: currentInvoiceItems,
+        finalBillAmount: globalTotalBill
+    };
+    
+    const orderEvent = new CustomEvent("newOrderPlaced", { detail: orderDataPayload });
+    window.dispatchEvent(orderEvent);
 
     modal.style.display = "flex";
 }
