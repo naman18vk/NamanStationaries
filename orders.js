@@ -2,8 +2,8 @@
    MASTER ORDERS DATABASE STORAGE ARRAY
    ======================================================= */
 
-// Yeh array har ek generated invoice/bill ko apne andar store karega (LocalStorage se data uthayega)
-const ALL_COMPLETED_ORDERS = JSON.parse(localStorage.getItem("NamanPermanentOrders")) || [];
+// Yeh khali array har ek generated invoice/bill ko apne andar store karega
+const ALL_COMPLETED_ORDERS = [];
 
 /**
  * Naye bill ka poora data is array me push karne ka master function
@@ -28,27 +28,26 @@ function saveNewInvoiceToHistory(txnId, customerName, dateString, itemsList, fin
     // Array me data inject kiya
     ALL_COMPLETED_ORDERS.push(newOrderInvoice);
 
-    // 🚀 NEW CODE: Data ko permanent save kiya taaki page reload par delete na ho
-    localStorage.setItem("NamanPermanentOrders", JSON.stringify(ALL_COMPLETED_ORDERS));
-
     // Testing ke liye console me poora record registry print karke check karein
     console.log("🔥 SUCCESS: Bill Data saved to Master Orders Array History!", ALL_COMPLETED_ORDERS);
 }
 
-// 🚀 NEW CODE: Jab bhi kisi dusre tab/file (jaise cart.js) se data save ho, ye array real-time me update ho jaye
+/* =======================================================
+   🚀 AUTO-SYNC ENGINE FOR SEPARATE PAGES (NEW BRIDGE)
+   ======================================================= */
 /**
- * 🚀 AUTO-SYNC ENGINE FOR SEPARATE PAGES
- * Jaise hi order.html page load hoga, ye cart.js se bheja gaya data automatic 
- * aapke ALL_COMPLETED_ORDERS array me inject kar dega.
+ * Jaise hi user order.html wale page par aayega, ye listener automatic 
+ * cart.js dwara localStorage me bheje gaye data ko read karega aur 
+ * aapke upar bane 'saveNewInvoiceToHistory' function ke andar push kar dega.
  */
 window.addEventListener("DOMContentLoaded", () => {
-    // Storage se data check karenge
+    // LocalStorage bridge se pending data check karenge
     const pendingData = localStorage.getItem("PendingInvoicesToPush");
 
     if (pendingData) {
         const invoicesList = JSON.parse(pendingData);
 
-        // Har ek invoice ko aapke master function me pass karenge
+        // Jitne bhi naye bills aaye hain, unhe ek-ek karke aapke function me pass karenge
         invoicesList.forEach(invoice => {
             saveNewInvoiceToHistory(
                 invoice.txnId,
@@ -59,30 +58,15 @@ window.addEventListener("DOMContentLoaded", () => {
             );
         });
 
-        // Ek baar array me data successfully chala gaya, to bridge storage saaf kar denge
+        // Ek baar data array me safely inject hone ke baad, temporary storage ko clear kar denge
+        // Isse data sirf ek baar array me load hoga aur bar-bar duplicate nahi hoga
         localStorage.removeItem("PendingInvoicesToPush");
         
-        console.log("✅ ALL PENDING ORDERS SUCCESSFULLY LOADED INTO MASTER ARRAY!");
+        console.log("✅ ALL PENDING ORDERS SUCCESSFULLY LOADED INTO ALL_COMPLETED_ORDERS ARRAY!");
     } else {
-        console.log("ℹ️ No new orders found to sync.");
+        console.log("ℹ️ No new orders found to sync right now.");
     }
+
+    // 💡 TIP: Agar aapke paas order.html me HTML table render karne ka koi function hai,
+    // to aap use yahan call kar sakte hain. Jaise: renderOrderTable();
 });
-
-window.saveNewInvoiceToHistory = function(txnId, customerName, dateString, itemsList, finalBillAmount) {
-    
-    // Poore bill ka ek single systematic object package banaya
-    const newOrderInvoice = {
-        transactionId: txnId,
-        customer: customerName,
-        dateTime: dateString,
-        purchasedItems: itemsList, 
-        grandTotal: finalBillAmount,
-        paymentStatus: "PAID (COD)"
-    };
-
-    // Array me data inject kiya
-    ALL_COMPLETED_ORDERS.push(newOrderInvoice);
-
-    // Testing ke liye console me print karein
-    console.log("🔥 SUCCESS: Bill Data saved to Master Orders Array History!", ALL_COMPLETED_ORDERS);
-}
