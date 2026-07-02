@@ -36,14 +36,37 @@ function saveNewInvoiceToHistory(txnId, customerName, dateString, itemsList, fin
 }
 
 // 🚀 NEW CODE: Jab bhi kisi dusre tab/file (jaise cart.js) se data save ho, ye array real-time me update ho jaye
-window.addEventListener("storage", (e) => {
-    if (e.key === "NamanPermanentOrders") {
-        ALL_COMPLETED_ORDERS.length = 0; // Puraane array ko clear kiya
-        ALL_COMPLETED_ORDERS.push(...JSON.parse(e.newValue || "[]")); // Naya data load kiya
-        console.log("🔄 SYNC: Array updated from another file!", ALL_COMPLETED_ORDERS);
+/**
+ * 🚀 AUTO-SYNC ENGINE FOR SEPARATE PAGES
+ * Jaise hi order.html page load hoga, ye cart.js se bheja gaya data automatic 
+ * aapke ALL_COMPLETED_ORDERS array me inject kar dega.
+ */
+window.addEventListener("DOMContentLoaded", () => {
+    // Storage se data check karenge
+    const pendingData = localStorage.getItem("PendingInvoicesToPush");
+
+    if (pendingData) {
+        const invoicesList = JSON.parse(pendingData);
+
+        // Har ek invoice ko aapke master function me pass karenge
+        invoicesList.forEach(invoice => {
+            saveNewInvoiceToHistory(
+                invoice.txnId,
+                invoice.customerName,
+                invoice.dateString,
+                invoice.itemsList,
+                invoice.finalBillAmount
+            );
+        });
+
+        // Ek baar array me data successfully chala gaya, to bridge storage saaf kar denge
+        localStorage.removeItem("PendingInvoicesToPush");
+        
+        console.log("✅ ALL PENDING ORDERS SUCCESSFULLY LOADED INTO MASTER ARRAY!");
+    } else {
+        console.log("ℹ️ No new orders found to sync.");
     }
 });
-// order.js ke andar function ko window.saveNewInvoiceToHistory bana dein
 
 window.saveNewInvoiceToHistory = function(txnId, customerName, dateString, itemsList, finalBillAmount) {
     
