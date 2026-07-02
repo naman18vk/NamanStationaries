@@ -43,3 +43,23 @@ window.addEventListener("storage", (e) => {
         console.log("🔄 SYNC: Array updated from another file!", ALL_COMPLETED_ORDERS);
     }
 });
+// order.js ke andar function ko window.saveNewInvoiceToHistory bana dein
+
+window.saveNewInvoiceToHistory = function(txnId, customerName, dateString, itemsList, finalBillAmount) {
+    
+    // Poore bill ka ek single systematic object package banaya
+    const newOrderInvoice = {
+        transactionId: txnId,
+        customer: customerName,
+        dateTime: dateString,
+        purchasedItems: itemsList, 
+        grandTotal: finalBillAmount,
+        paymentStatus: "PAID (COD)"
+    };
+
+    // Array me data inject kiya
+    ALL_COMPLETED_ORDERS.push(newOrderInvoice);
+
+    // Testing ke liye console me print karein
+    console.log("🔥 SUCCESS: Bill Data saved to Master Orders Array History!", ALL_COMPLETED_ORDERS);
+}
