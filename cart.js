@@ -107,64 +107,25 @@ function clearCartOnly() {
 /* -------------------------------------------------------
    🔥 PROCEED TO CHECKOUT (Show Invoice & Initialize DB Entry)
    ------------------------------------------------------- */
-function openReceiptBill() {
-    let cartArray = JSON.parse(localStorage.getItem("userCart")) || [];
-    if (cartArray.length === 0) return;
-
-    const modal = document.getElementById("receiptModal");
-    const receiptBody = document.getElementById("receiptItemsBody");
-    const receiptTotal = document.querySelectorAll("#receiptGrandTotal");
-    const receiptDate = document.getElementById("receiptDate");
-    const receiptTxn = document.getElementById("receiptTxn");
-    const receiptUserLabel = document.getElementById("receiptUser");
-
-    receiptBody.innerHTML = "";
-    
-    let currentInvoiceItems = [];
-
-    cartArray.forEach(cartItem => {
-        const itemInfo = MASTER_PRODUCTS.find(p => String(p.id).trim() === String(cartItem.id).trim());
-        if (itemInfo) {
-            const subtotal = Number(itemInfo.price) * Number(cartItem.quantity);
-            receiptBody.innerHTML += `
-                <tr style="border-bottom: 1px dotted #eee;">
-                    <td style="padding: 6px 0; text-align: left;">${itemInfo.name}</td>
-                    <td style="text-align: center; padding: 6px 0;">${cartItem.quantity}</td>
-                    <td style="text-align: right; padding: 6px 0;">Rs. ${subtotal}</td>
-                </tr>
-            `;
-
-            currentInvoiceItems.push({
-                productName: itemInfo.name,
-                quantity: cartItem.quantity,
-                pricePerUnit: itemInfo.price,
-                itemSubtotal: subtotal
-            });
-        }
-    });
-
-    const generatedTxnId = `NS${Math.floor(100000 + Math.random() * 900000)}`;
-    const currentTimestamp = `Date: ${new Date().toLocaleDateString()} | Time: ${new Date().toLocaleTimeString()}`;
-    const currentLoggedUser = localStorage.getItem("savedUsername") || "Customer";
-
-    receiptTotal.forEach(el => el.textContent = `Rs. ${globalTotalBill}`);
-    receiptDate.textContent = currentTimestamp;
-    receiptTxn.textContent = `TXN ID: ${generatedTxnId}`;
-
-    if (receiptUserLabel) {
-        receiptUserLabel.textContent = `Welcome: ${currentLoggedUser}`;
-        receiptUserLabel.style.color = "#000000";
-    }
-
-    // Aapka existing DB function
+    // 1. Aapka existing DB function
     writeOrderToPermanentDB(generatedTxnId, currentLoggedUser, currentTimestamp, currentInvoiceItems, globalTotalBill);
 
-    // 🚀 FIXED DIRECT CALL: Global scope se function ko call kiya safely
-    if (typeof window.saveNewInvoiceToHistory === "function") {
-        window.saveNewInvoiceToHistory(generatedTxnId, currentLoggedUser, currentTimestamp, currentInvoiceItems, globalTotalBill);
-    } else {
-        console.error("❌ ERROR: order.js ka saveNewInvoiceToHistory function nahi mila! Check karein script order.");
-    }
+    // 🚀 ALAG PAGES KE LIYE FIXED CODE: 
+    // Pehle se local storage me agar koi pending orders hain to unhe nikalenge
+    let pendingInvoices = JSON.parse(localStorage.getItem("PendingInvoicesToPush")) || [];
+    
+    // Naya data package taiyar kiya
+    pendingInvoices.push({
+        txnId: generatedTxnId,
+        customerName: currentLoggedUser,
+        dateString: currentTimestamp,
+        itemsList: currentInvoiceItems,
+        finalBillAmount: globalTotalBill
+    });
+
+    // Storage me save kar diya taaki order.html ise fetch kar sake
+    localStorage.setItem("PendingInvoicesToPush", JSON.stringify(pendingInvoices));
+    console.log("📦 Order details stored in local bridge for order.js");
 
     modal.style.display = "flex";
 }
